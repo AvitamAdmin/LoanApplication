@@ -4,31 +4,34 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
 
 @SpringBootApplication
-@EnableMongoRepositories("com.gulbalasalamov.bankloanapplication.repository")
-@EnableElasticsearchRepositories(basePackages = "com.gulbalasalamov.bankloanapplication")
+@EnableMongoRepositories("com.avitam.bankloanapplication.repository")
 @ComponentScan(
         {
-                "com.gulbalasalamov.bankloanapplication.tokenGeneration",
-                "com.gulbalasalamov.bankloanapplication.repository",
-                "com.gulbalasalamov.bankloanapplication.service",
-                "com.gulbalasalamov.bankloanapplication.config",
-                "com.gulbalasalamov.bankloanapplication.web.controllers",
-                "com.gulbalasalamov.bankloanapplication.core",
-                "com.gulbalasalamov.bankloanapplication.exception",
-                "com.gulbalasalamov.bankloanapplication.qa",
-                "com.gulbalasalamov.bankloanapplication.validation",
-                "com.gulbalasalamov.bankloanapplication.mail",
-                "com.gulbalasalamov.bankloanapplication.listener",
-                "com.gulbalasalamov.bankloanapplication.model"
+                "com.avitam.bankloanapplication.tokenGeneration",
+                "com.avitam.bankloanapplication.repository",
+                "com.avitam.bankloanapplication.service",
+                "com.avitam.bankloanapplication.config",
+                "com.avitam.bankloanapplication.web.controllers",
+                "com.avitam.bankloanapplication.core",
+                "com.avitam.bankloanapplication.exception",
+                "com.avitam.bankloanapplication.qa",
+                "com.avitam.bankloanapplication.validation",
+                "com.avitam.bankloanapplication.mail",
+                "com.avitam.bankloanapplication.listener",
+                "com.avitam.bankloanapplication.model"
         }
 )
 public class BankLoanApplication {
@@ -37,8 +40,8 @@ public class BankLoanApplication {
         SpringApplication.run(BankLoanApplication.class, args);
     }
 
-   /* @Bean
-    public  ResourceBundleMessageSource messageSource() {
+    @Bean
+    public ResourceBundleMessageSource messageSource() {
         var source = new ResourceBundleMessageSource();
         source.setBasename("message");
         source.setDefaultEncoding("UTF-8");
@@ -51,7 +54,12 @@ public class BankLoanApplication {
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
         sessionLocaleResolver.setDefaultLocale(Locale.ENGLISH);
         return sessionLocaleResolver;
-    }*/
+    }
+
+//    @Override
+//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//        return application.sources(BankLoanApplication.class);
+//    }
 
     @Bean
     public ModelMapper modelMapper() {

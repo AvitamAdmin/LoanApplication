@@ -1,9 +1,9 @@
 package com.avitam.bankloanapplication.model.dto;
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
-import javax.validation.constraints.NotBlank;
 
 @Getter
 public class UserLoginDTO {

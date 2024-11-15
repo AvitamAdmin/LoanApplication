@@ -46,4 +46,6 @@ public class CustomerDTO extends CommonDto{
     private Customer customer;
     private List<Customer> customerList;
 
+    public CustomerDTO(String s, String john, String cloud, String s1, String s2, double v, String female, int i, int i1, Object o) {
+    }
 }

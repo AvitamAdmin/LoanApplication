@@ -1,13 +1,12 @@
 package com.avitam.bankloanapplication.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-//import javax.validation.constraints.*;
-//import javax.validation.constraints.*;
+
 import java.util.List;
 
 @Getter
