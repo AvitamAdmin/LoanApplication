@@ -9,7 +9,7 @@ import lombok.ToString;
     @Setter
     @NoArgsConstructor
     @ToString
-    public class CommonDto {
+    public class CommonDto extends PaginationDto{
         private String baseUrl;
         private String recordId;
         private String message;

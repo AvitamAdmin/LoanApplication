@@ -1,6 +1,7 @@
 package com.avitam.bankloanapplication.model.entity;
 
 import com.avitam.bankloanapplication.model.Role;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,14 +13,17 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document( "users")
+@Document("users")
 public class User {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Size(min = 5, max = 25, message = "username length should be between 5 and 25 characters")
+    @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Size(min = 5, message = "Minimum password length: 5 characters")
@@ -31,7 +35,9 @@ public class User {
         this.password = password;
     }
 
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> roles;
     private String mobileNumber;
     private String resetPasswordToken;
+
 }

@@ -36,18 +36,18 @@ public class AdminController extends BaseController{
     @Autowired
     private CustomerRepository customerRepository;
 
-    /*@PostMapping("")
+    @PostMapping("")
     @ResponseBody
-    public UserDto getAllUsers(@RequestBody UserDto userDto) {
+    public CustomerDTO getAllUsers(@RequestBody CustomerDTO userDto) {
         Pageable pageable = getPageable(userDto.getPage(), userDto.getSizePerPage(), userDto.getSortDirection(), userDto.getSortField());
-        User user = userDto.getUser();
-        Page<User> page = isSearchActive(user) != null ? userRepository.findAll(Example.of(user), pageable) : userRepository.findAll(pageable);
-        userDto.setUsersList(page.getContent());
+        Customer user = userDto.getCustomer();
+        Page<Customer> page = isSearchActive(user) != null ? customerRepository.findAll(Example.of(user), pageable) : customerRepository.findAll(pageable);
+        userDto.setCustomerList(page.getContent());
         userDto.setTotalPages(page.getTotalPages());
         userDto.setTotalRecords(page.getTotalElements());
         userDto.setBaseUrl(ADMIN_USER);
         return userDto;
-    }*/
+    }
 
     @GetMapping("/get")
     @ResponseBody
