@@ -9,12 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserRepository extends MongoRepository<User, Integer> {
 
     // JPQL
-    boolean existsByUsername(String username);
+ //   boolean existsByUsername(String username);
 
     User findByUsername(String username);
 
     @Transactional
-    void deleteByUsername(String username);
+  //  void deleteByUsername(String username);
 
     User findByEmail(String username);
 
