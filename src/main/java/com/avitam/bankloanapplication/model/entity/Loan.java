@@ -7,19 +7,21 @@ import com.avitam.bankloanapplication.model.LoanType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("loan")
-public class Loan {
+public class Loan extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private ObjectId id;
 
     @Enumerated(EnumType.STRING)
     private LoanType loanType;

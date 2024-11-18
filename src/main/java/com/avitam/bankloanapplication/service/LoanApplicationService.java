@@ -45,9 +45,6 @@ public class LoanApplicationService {
             loanApplicationRepository.save(loanApplication);
         });
     }
-
-
-
     public Loan getLoanApplicationResult(String nationalIdentityNumber) {
         LoanApplication finalizedApplication = finalizeLoanApplication(nationalIdentityNumber);
 
@@ -58,10 +55,7 @@ public class LoanApplicationService {
         }
         return finalizedApplication.getLoan();
     }
-
-
     private Loan loanLimitCalculator(LoanApplication loanApplication) {
-
         var loan = loanApplication.getLoan();
         var loanCustomer = loanApplication.getCustomer();
         var loanScore = loanCustomer.getLoanScore();
@@ -83,7 +77,6 @@ public class LoanApplicationService {
     }
 
     private void verifyLoan(LoanApplication loanApplication) {
-
         var loanCustomer = loanApplication.getCustomer();
 
         var loanToUpdate = getNotResultedLoanApplicationOfCustomer(loanCustomer);
@@ -135,9 +128,6 @@ public class LoanApplicationService {
                 .findAny()
                 .orElseThrow(() -> new InvalidLoanApplicationException("."));
     }
-
-
-
 
     protected Optional<LoanApplication> findLoanApplicationById(Long id) {
         return Optional.ofNullable(loanApplicationRepository.findById(id).orElseThrow(() ->
