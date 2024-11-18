@@ -48,18 +48,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save( CustomerDTO request) {
-        Customer customer=null;
+        Customer customer=new Customer();
         if(request.getRecordId()!=null)
         {
             customer = customerRepository.findByRecordId(request.getRecordId());
             modelMapper.map(request, customer);
         }
         else {
-            customer = request.getCustomer();
-            customer.setCreationTime(new Date());
-            customerRepository.save(customer);
+            customer = modelMapper.map(request.getCustomer(),Customer.class);
+            //customer =request.getCustomer();
+           // customer.setCreationTime(new Date());
+            customer.setLoanScore(1000);
+            customerRepository.save( customer);
             }
-        customer.setLastModified(new Date());
+        //customer.setLastModified(new Date());
         /*if(StringUtils.isNotEmpty(customer.getPassword()))
         {
             customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));

@@ -48,14 +48,14 @@ public class CustomerService {
     public void updateCustomer(String nationalIdentityNumber, CustomerDTO customerDTO) {
         var customerByNationalIdentityNumber = findCustomerByNationalIdentityNumber(nationalIdentityNumber);
         customerByNationalIdentityNumber.ifPresent(customer -> {
-            customer.setNationalIdentityNumber(customerDTO.getNationalIdentityNumber());
-            customer.setFirstName(customerDTO.getFirstName());
-            customer.setLastName(customerDTO.getLastName());
-            customer.setPhone(customerDTO.getPhone());
-            customer.setEmail(customerDTO.getEmail());
-            customer.setMonthlyIncome(customerDTO.getMonthlyIncome());
-            customer.setGender(customerDTO.getGender());
-            customer.setAge(customerDTO.getAge());
+ //          customer.setNationalIdentityNumber(customerDTO.getNationalIdentityNumber());
+//            customer.setFirstName(customerDTO.getFirstName());
+//            customer.setLastName(customerDTO.getLastName());
+//            customer.setPhone(customerDTO.getPhone());
+//            customer.setEmail(customerDTO.getEmail());
+//            customer.setMonthlyIncome(customerDTO.getMonthlyIncome());
+//            customer.setGender(customerDTO.getGender());
+//            customer.setAge(customerDTO.getAge());
             customerRepository.save(customer);
         });
     }

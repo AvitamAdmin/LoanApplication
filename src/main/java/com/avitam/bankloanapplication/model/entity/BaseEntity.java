@@ -18,13 +18,13 @@ public class BaseEntity {
     @Id
     private ObjectId id;
     private String name;
-    private String creator;
+ //   private String creator;
     private Boolean status;
     @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm")
-    private Date creationTime;
-    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm")
-    private Date lastModified;
-    private String modifiedBy;
-    private String pic;
+   private Date creationTime;
+  //  @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm")
+//    private Date lastModified;
+//    private String modifiedBy;
+//    private String pic;
     private String identifier;
 }
