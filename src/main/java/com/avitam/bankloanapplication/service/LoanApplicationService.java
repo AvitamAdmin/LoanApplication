@@ -139,5 +139,6 @@ public class LoanApplicationService {
     }
 
 
-
+    public void addNotificationToLoanApplication(Long loanApplicationId, Long notificationId) {
+    }
 }
