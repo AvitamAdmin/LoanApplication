@@ -35,7 +35,11 @@ public class LoanApplicationController {
     }
 
 
-
+    @PutMapping("/{loanApplicationId}/notification/{notificationId}")
+    public ResponseEntity addNotificationToLoanApplication(@PathVariable Long loanApplicationId, @PathVariable Long notificationId) {
+        loanApplicationService.addNotificationToLoanApplication(loanApplicationId, notificationId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
 
     //    @PutMapping("/{loanApplicationId}/loan/{loanId}")
