@@ -1,0 +1,10 @@
+package com.avitam.bankloanapplication.repository;
+
+import com.avitam.bankloanapplication.model.entity.LoanScoreResult;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface LoanScoreResultRepository extends MongoRepository<LoanScoreResult,String> {
+    void deleteByRecordId(String id);
+
+    LoanScoreResult findByRecordId(String RecordId);
+}
