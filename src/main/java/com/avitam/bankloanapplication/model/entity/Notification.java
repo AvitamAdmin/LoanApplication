@@ -1,23 +1,18 @@
 package com.avitam.bankloanapplication.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.persistence.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Document("notification")
-public class Notification {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Notification extends BaseEntity{
+
 
     private String text;
 
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "notification")
-    private LoanApplication loanApplication;
 
-}
+    }

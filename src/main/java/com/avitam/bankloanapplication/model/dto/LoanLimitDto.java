@@ -7,13 +7,15 @@ import lombok.ToString;
 
 import java.util.List;
 
-@Setter
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
-public class RoleDto extends CommonDto {
+public class LoanLimitDto extends CommonDto{
 
-    private List<String> roles;
-
+    private String description;
+    private double loanLimitAmount;
+    private double incomeLimit;
+    private List<String> loanLimitList;
 
 }

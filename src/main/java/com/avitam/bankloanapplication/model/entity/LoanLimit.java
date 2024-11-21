@@ -7,7 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Role extends BaseEntity{
+public class LoanLimit extends BaseEntity{
 
+    private String description;
+    private Double loanLimitAmount;
+    private Double incomeLimit;
 
 }

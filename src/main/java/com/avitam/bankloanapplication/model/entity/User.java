@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -14,19 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document("users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Size(min = 5, max = 25, message = "username length should be between 5 and 25 characters")
-    @Column(unique = true, nullable = false)
+public class User extends BaseEntity{
     private String username;
-
-    @Column(unique = true, nullable = false)
     private String email;
-
-    @Size(min = 5, message = "Minimum password length: 5 characters")
     private String password;
 
     public User(String username, String email, String password) {

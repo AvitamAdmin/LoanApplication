@@ -1,14 +1,13 @@
 package com.avitam.bankloanapplication.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Document("loanScore")
+@Document("loanScoreResult")
 public class LoanScoreResult extends BaseEntity{
     private String description;
+
 }

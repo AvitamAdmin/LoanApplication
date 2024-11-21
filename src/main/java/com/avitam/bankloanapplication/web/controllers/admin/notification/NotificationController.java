@@ -1,28 +1,63 @@
 package com.avitam.bankloanapplication.web.controllers.admin.notification;
 
+import com.avitam.bankloanapplication.model.dto.NotificationDto;
 import com.avitam.bankloanapplication.model.entity.Notification;
+import com.avitam.bankloanapplication.repository.NotificationRepository;
 import com.avitam.bankloanapplication.service.NotificationService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.avitam.bankloanapplication.web.controllers.BaseController;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+
 @RestController
-@RequestMapping("/api/v1/notification")
-public class NotificationController {
-    private final NotificationService notificationService;
+@RequestMapping("/admin/notification")
+public class NotificationController extends BaseController {
+    private static final String ADMIN_NOTIFICATION ="admin/notification" ;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    public NotificationController(NotificationService notificationService) {
-        this.notificationService = notificationService;
+    @PostMapping
+    public NotificationDto getAllRoles(@RequestBody NotificationDto notificationDto){
+        Pageable pageable=getPageable(notificationDto.getPage(),notificationDto.getSizePerPage(),notificationDto.getSortDirection(),notificationDto.getSortField());
+        Notification notification = modelMapper.map(notificationDto, Notification.class);
+        Page<Notification> page=isSearchActive(notification) !=null ? notificationRepository.findAll(Example.of(notification),pageable) : notificationRepository.findAll(pageable);
+        notificationDto.setNotifications(Collections.singletonList(page.getContent().toString()));
+        notificationDto.setBaseUrl(ADMIN_NOTIFICATION);
+        notificationDto.setTotalPages(page.getTotalPages());
+        notificationDto.setTotalRecords(page.getTotalElements());
+        return notificationDto;
+
     }
-
-    @GetMapping("/get/{notificationId}")
-    public ResponseEntity<Notification> getNotificationById(@PathVariable Long notificationId) {
-        return new ResponseEntity(notificationService.getNotificationById(notificationId), HttpStatus.OK);
+    @GetMapping("/get")
+    public NotificationDto getNotificationById(@RequestBody NotificationDto request) {
+        Notification notification=notificationRepository.findByRecordId(request.getRecordId());
+        request=modelMapper.map(notification, NotificationDto.class);
+        request.setBaseUrl(ADMIN_NOTIFICATION);
+        return request;
     }
 
     @PostMapping("/create")
-    public ResponseEntity addCustomer(@RequestBody Notification notification) {
-        notificationService.createNotification(notification);
-        return new ResponseEntity(HttpStatus.CREATED);
+    public NotificationDto addCustomer(@RequestBody NotificationDto request) {
+
+        return  notificationService.createNotification(request);
+    }
+
+    @PostMapping("/delete")
+    public NotificationDto delete(@RequestBody NotificationDto notificationDto) {
+        for (String id : notificationDto.getRecordId().split(",")) {
+            notificationRepository.deleteByRecordId(id);
+        }
+        notificationDto.setMessage("Data deleted successfully");
+        notificationDto.setBaseUrl(ADMIN_NOTIFICATION);
+        return notificationDto;
     }
 }
