@@ -1,12 +1,15 @@
 package com.avitam.bankloanapplication.service;
 
 import com.avitam.bankloanapplication.model.dto.LoanTypeDto;
-import com.avitam.bankloanapplication.model.entity.Loan;
+import com.avitam.bankloanapplication.model.dto.LoanTypeWsDto;
 import com.avitam.bankloanapplication.model.entity.LoanType;
 import com.avitam.bankloanapplication.repository.LoanTypeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class LoanTypeService {
@@ -18,23 +21,29 @@ public class LoanTypeService {
     private ModelMapper modelMapper;
 
 
-    public LoanTypeDto handleEdit(LoanTypeDto request) {
+    public LoanTypeWsDto handleEdit(LoanTypeWsDto request) {
+        LoanTypeWsDto loanTypeWsDto = new LoanTypeWsDto();
         LoanType loanType=new LoanType();
-        if(request.getRecordId()!=null){
-            loanType= loanTypeRepository.findByRecordId(request.getRecordId());
-            modelMapper.map(request, loanType);
+        List<LoanTypeDto> loanTypeDtoList = request.getLoanTypeDtoList();
+        List<LoanType> loanTypes = new ArrayList<>();
+        for(LoanTypeDto loan: loanTypeDtoList) {
+
+            if (loan.getRecordId() != null) {
+                loanType = loanTypeRepository.findByRecordId(loan.getRecordId());
+                modelMapper.map(loan, loanType);
+                loanTypeRepository.save(loanType);
+            } else {
+                loanType = modelMapper.map(loan, LoanType.class);
+                loanTypeRepository.save(loanType);
+            }
+            if (request.getRecordId() == null) {
+                loanType.setRecordId(String.valueOf(loanType.getId().getTimestamp()));
+            }
             loanTypeRepository.save(loanType);
+            loanTypes.add(loanType);
+            request.setBaseUrl(ADMIN_LOANTYPE);
         }
-        else {
-            loanType = modelMapper.map(request, LoanType.class);
-            loanTypeRepository.save(loanType);
-        }
-        if(request.getRecordId()==null){
-            loanType.setRecordId(String.valueOf(loanType.getId().getTimestamp()));
-        }
-        loanTypeRepository.save(loanType);
-        request=modelMapper.map(loanType, LoanTypeDto.class);
-        request.setBaseUrl(ADMIN_LOANTYPE);
+        request.setLoanTypeDtoList(modelMapper.map(loanTypes,List.class));
         return request;
     }
 }
