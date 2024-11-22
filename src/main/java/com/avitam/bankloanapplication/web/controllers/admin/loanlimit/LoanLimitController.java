@@ -1,14 +1,15 @@
 package com.avitam.bankloanapplication.web.controllers.admin.loanlimit;
 
-import com.avitam.bankloanapplication.model.dto.LoanLimitDto;
-import com.avitam.bankloanapplication.model.dto.LoanScoreResultDto;
+import com.avitam.bankloanapplication.model.dto.*;
 import com.avitam.bankloanapplication.model.entity.LoanLimit;
 import com.avitam.bankloanapplication.model.entity.LoanScoreResult;
+import com.avitam.bankloanapplication.model.entity.LoanStatus;
 import com.avitam.bankloanapplication.repository.LoanLimitRepository;
 import com.avitam.bankloanapplication.repository.LoanScoreResultRepository;
 import com.avitam.bankloanapplication.service.LoanLimitService;
 import com.avitam.bankloanapplication.service.LoanScoreResultService;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
+import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -17,9 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/admin/loanLimit")
 public class LoanLimitController extends BaseController {
     @Autowired
@@ -32,42 +35,56 @@ public class LoanLimitController extends BaseController {
     private static final String ADMIN_LOANLIMIT = "/admin/loanLimit" ;
 
     @PostMapping
-    @ResponseBody
-    public LoanLimitDto getAllLoanLimits(@RequestBody LoanLimitDto loanLimitDto){
-        Pageable pageable=getPageable(loanLimitDto.getPage(),loanLimitDto.getSizePerPage(),loanLimitDto.getSortDirection(),loanLimitDto.getSortField());
-        LoanLimit loanLimit = modelMapper.map(loanLimitDto, LoanLimit.class);
+    public LoanLimitWsDto getAllLoanTypes(@RequestBody LoanLimitWsDto loanLimitWsDto){
+        Pageable pageable=getPageable(loanLimitWsDto.getPage(),loanLimitWsDto.getSizePerPage(),loanLimitWsDto.getSortDirection(),loanLimitWsDto.getSortField());
+        LoanLimitDto loanLimitDto = CollectionUtils.isNotEmpty(loanLimitWsDto.getLoanLimitDtos()) ? loanLimitWsDto.getLoanLimitDtos().get(0) : new LoanLimitDto();
+        LoanLimit loanLimit = modelMapper.map(loanLimitWsDto, LoanLimit.class);
         Page<LoanLimit> page=isSearchActive(loanLimit) !=null ? loanLimitRepository.findAll(Example.of(loanLimit),pageable) : loanLimitRepository.findAll(pageable);
-        loanLimitDto.setLoanLimitList(Collections.singletonList(page.getContent().toString()));
-        loanLimitDto.setBaseUrl(ADMIN_LOANLIMIT);
-        loanLimitDto.setTotalPages(page.getTotalPages());
-        loanLimitDto.setTotalRecords(page.getTotalElements());
-        return loanLimitDto;
+        loanLimitWsDto.setLoanLimitDtos(modelMapper.map(page.getContent(), List.class));
+        loanLimitWsDto.setBaseUrl(ADMIN_LOANLIMIT);
+        loanLimitWsDto.setTotalPages(page.getTotalPages());
+        loanLimitWsDto.setTotalRecords(page.getTotalElements());
+        return loanLimitWsDto;
 
     }
+    @GetMapping("/get")
+    public LoanLimitWsDto getLoanType(@RequestBody LoanLimitWsDto request) {
+        LoanLimitWsDto loanLimitWsDto = new LoanLimitWsDto();
+        List<LoanLimit> loanLimits = new ArrayList<>();
+        for(LoanLimitDto loanLimitDto: request.getLoanLimitDtos()) {
+            loanLimits.add(loanLimitRepository.findByRecordId(loanLimitDto.getRecordId()));
+        }
+        loanLimitWsDto.setLoanLimitDtos(modelMapper.map(loanLimits,List.class));
+        loanLimitWsDto.setBaseUrl(ADMIN_LOANLIMIT);
+        return loanLimitWsDto;
+    }
+
     @PostMapping("/edit")
-    @ResponseBody
-    public LoanLimitDto createLoanScore(@RequestBody LoanLimitDto request){
+    public LoanLimitWsDto createLoanScore(@RequestBody LoanLimitWsDto request){
         return loanLimitService.editLoanLimit(request);
-
     }
+
+    @PostMapping("/getedit")
+    public LoanLimitWsDto getActiveLoanScore(@RequestBody LoanLimitWsDto request){
+        LoanLimitWsDto loanLimitWsDto=new LoanLimitWsDto();
+        List<LoanLimit> loanLimitList=new ArrayList<>();
+        for(LoanLimitDto loanScoreResultDto: request.getLoanLimitDtos()){
+            loanLimitList.add(loanLimitRepository.findByRecordId(loanScoreResultDto.getRecordId()));
+        }
+        loanLimitWsDto.setLoanLimitDtos(modelMapper.map(loanLimitList, List.class));
+        loanLimitWsDto.setBaseUrl(ADMIN_LOANLIMIT);
+        return loanLimitWsDto;
+    }
+
 
     @PostMapping("/delete")
-    @ResponseBody
-    public LoanLimitDto deleteLoanLimit(@RequestBody LoanLimitDto request){
-        for(String id:request.getRecordId().split(",")){
-            loanLimitRepository.deleteByRecordId(id);
+    public LoanLimitWsDto delete(@RequestBody LoanLimitWsDto loanLimitWsDto) {
+            for(LoanLimitDto loanScoreDto : loanLimitWsDto.getLoanLimitDtos()){
+                loanLimitRepository.deleteByRecordId(loanScoreDto.getRecordId());
+            }
+            loanLimitWsDto.setMessage("Data deleted successfully");
+            loanLimitWsDto.setBaseUrl(ADMIN_LOANLIMIT);
+            return loanLimitWsDto;
         }
-        request.setMessage("Data deleted successfully");
-        request.setBaseUrl(ADMIN_LOANLIMIT);
-        return request;
-    }
 
-    @PostMapping("/getEdit")
-    @ResponseBody
-    public LoanLimitDto getActiveLoanScore(@RequestBody LoanLimitDto request){
-        LoanLimit loanLimit = loanLimitRepository.findByRecordId(request.getRecordId());
-        request=modelMapper.map(loanLimit, LoanLimitDto.class);
-        request.setBaseUrl(ADMIN_LOANLIMIT);
-        return request;
-    }
 }

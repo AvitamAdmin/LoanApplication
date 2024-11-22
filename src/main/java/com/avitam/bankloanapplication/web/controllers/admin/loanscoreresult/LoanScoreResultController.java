@@ -1,6 +1,7 @@
 package com.avitam.bankloanapplication.web.controllers.admin.loanscoreresult;
 
 import com.avitam.bankloanapplication.model.dto.LoanScoreResultDto;
+import com.avitam.bankloanapplication.model.dto.LoanScoreResultWsDto;
 import com.avitam.bankloanapplication.model.entity.LoanScoreResult;
 import com.avitam.bankloanapplication.repository.LoanScoreResultRepository;
 import com.avitam.bankloanapplication.service.LoanScoreResultService;
@@ -12,8 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.apache.commons.collections4.CollectionUtils;
 
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/loanScoreResult")
@@ -29,42 +34,54 @@ public class LoanScoreResultController extends BaseController {
 
     @PostMapping
     @ResponseBody
-    public LoanScoreResultDto getAllLoanScore(@RequestBody LoanScoreResultDto loanScoreDto){
-        Pageable pageable=getPageable(loanScoreDto.getPage(),loanScoreDto.getSizePerPage(),loanScoreDto.getSortDirection(),loanScoreDto.getSortField());
-        LoanScoreResult loanScoreResult = modelMapper.map(loanScoreDto, LoanScoreResult.class);
+    public LoanScoreResultWsDto getAllLoanScore(@RequestBody LoanScoreResultWsDto loanScoreWsDto){
+        Pageable pageable=getPageable(loanScoreWsDto.getPage(),loanScoreWsDto.getSizePerPage(),loanScoreWsDto.getSortDirection(),loanScoreWsDto.getSortField());
+        LoanScoreResultDto loanScoreResultDto=CollectionUtils.isNotEmpty(loanScoreWsDto.getLoanScoreDtos()) ? loanScoreWsDto.getLoanScoreDtos().get(0) : new LoanScoreResultDto();
+        LoanScoreResult loanScoreResult = modelMapper.map(loanScoreWsDto, LoanScoreResult.class);
         Page<LoanScoreResult> page=isSearchActive(loanScoreResult) !=null ? loanScoreRepository.findAll(Example.of(loanScoreResult),pageable) : loanScoreRepository.findAll(pageable);
-        loanScoreDto.setLoanScoreResultList(Collections.singletonList(page.getContent().toString()));
-        loanScoreDto.setBaseUrl(ADMIN_LOANSCORE);
-        loanScoreDto.setTotalPages(page.getTotalPages());
-        loanScoreDto.setTotalRecords(page.getTotalElements());
-        return loanScoreDto;
+        loanScoreWsDto.setLoanScoreDtos(modelMapper.map(page.getContent(), List.class));
+        loanScoreWsDto.setBaseUrl(ADMIN_LOANSCORE);
+        loanScoreWsDto.setTotalPages(page.getTotalPages());
+        loanScoreWsDto.setTotalRecords(page.getTotalElements());
+        return loanScoreWsDto;
 
+    }
+    @GetMapping("/get")
+    @ResponseBody
+    public LoanScoreResultWsDto getActiveLoanScoreResult() {
+        LoanScoreResultWsDto loanScoreResultWsDto = new LoanScoreResultWsDto();
+        loanScoreResultWsDto.setBaseUrl(ADMIN_LOANSCORE);
+        loanScoreResultWsDto.setLoanScoreDtos(modelMapper.map(loanScoreRepository.findByStatus(true), List.class));
+        return loanScoreResultWsDto;
     }
     @PostMapping("/edit")
     @ResponseBody
-    public LoanScoreResultDto createLoanScore(@RequestBody LoanScoreResultDto request){
+    public LoanScoreResultWsDto createLoanScore(@RequestBody LoanScoreResultWsDto request){
         return loanScoreResultService.createLoanScore(request);
-
     }
 
     @PostMapping("/delete")
     @ResponseBody
-    public LoanScoreResultDto deleteLoanScore(@RequestBody LoanScoreResultDto request){
-        for(String id:request.getRecordId().split(",")){
-            loanScoreRepository.deleteByRecordId(id);
-        }
-        request.setMessage("Data deleted successfully");
-        request.setBaseUrl(ADMIN_LOANSCORE);
-        return request;
+    public LoanScoreResultWsDto deleteLoanScore(@RequestBody LoanScoreResultWsDto loanScoreWsDto){
+            for(LoanScoreResultDto loanScoreDto : loanScoreWsDto.getLoanScoreDtos()){
+            loanScoreRepository.deleteByRecordId(loanScoreDto.getRecordId());
+            }
+        loanScoreWsDto.setMessage("Data deleted successfully");
+        loanScoreWsDto.setBaseUrl(ADMIN_LOANSCORE);
+        return loanScoreWsDto;
     }
 
     @PostMapping("/getedit")
     @ResponseBody
-    public LoanScoreResultDto getActiveLoanScore(@RequestBody LoanScoreResultDto request){
-        LoanScoreResult loanScoreResult = loanScoreRepository.findByRecordId(request.getRecordId());
-        request=modelMapper.map(loanScoreResult, LoanScoreResultDto.class);
-        request.setBaseUrl(ADMIN_LOANSCORE);
-        return request;
+    public LoanScoreResultWsDto getActiveLoanScore(@RequestBody LoanScoreResultWsDto request){
+        LoanScoreResultWsDto loanScoreResultWsDto=new LoanScoreResultWsDto();
+        List<LoanScoreResult> loanScoreList=new ArrayList<>();
+        for(LoanScoreResultDto loanScoreResultDto: request.getLoanScoreDtos()){
+           loanScoreList.add(loanScoreRepository.findByRecordId(loanScoreResultDto.getRecordId()));
+        }
+        loanScoreResultWsDto.setLoanScoreDtos(modelMapper.map(loanScoreList, List.class));
+        loanScoreResultWsDto.setBaseUrl(ADMIN_LOANSCORE);
+        return loanScoreResultWsDto;
     }
 
 }

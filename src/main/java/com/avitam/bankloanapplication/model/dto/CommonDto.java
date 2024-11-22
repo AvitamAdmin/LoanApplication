@@ -4,17 +4,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bson.types.ObjectId;
+import org.springframework.format.annotation.DateTimeFormat;
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    public class CommonDto extends PaginationDto{
-        private String baseUrl;
-        private String recordId;
-        private String message;
-        private int  totalPages;
-        private long totalRecords;
-        private boolean success = true;
-    }
+import java.util.Date;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+public class CommonDto extends PaginationDto{
+    private ObjectId id;
+    private String name;
+    private String recordId;
+    private String identifier;
+    private Boolean status;
+    private String creator;
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    private Date creationTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    private Date lastModified;
+    private String modifiedBy;
+    private boolean success = true;
+    private String baseUrl;
+    private String message;
+
+}
 

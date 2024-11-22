@@ -1,12 +1,16 @@
 package com.avitam.bankloanapplication.service;
 
 import com.avitam.bankloanapplication.model.dto.LoanScoreResultDto;
+import com.avitam.bankloanapplication.model.dto.LoanScoreResultWsDto;
 import com.avitam.bankloanapplication.model.entity.LoanScoreResult;
 import com.avitam.bankloanapplication.repository.LoanScoreResultRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -18,26 +22,31 @@ public class LoanScoreResultService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public LoanScoreResultDto createLoanScore(LoanScoreResultDto request) {
-        LoanScoreResultDto loanScoreResultDto = null;
-        LoanScoreResult loanScoreResult = null;
-        if(request.getRecordId()!=null){
-            LoanScoreResult requestData = modelMapper.map(request, LoanScoreResult.class);
-            loanScoreResult= loanScoreResultRepository.findByRecordId(request.getRecordId());
-            modelMapper.map(requestData, loanScoreResult);
-            loanScoreResultRepository.save(loanScoreResult);
+    public LoanScoreResultWsDto createLoanScore(LoanScoreResultWsDto request) {
+        LoanScoreResult requestData = null;
+        List<LoanScoreResultDto> loanScoreDtos=request.getLoanScoreDtos();
+        List<LoanScoreResult> loanScoreResults=new ArrayList<>();
+        for(LoanScoreResultDto loanScoreDto:loanScoreDtos){
+        if(loanScoreDto.getRecordId()!=null){
+            requestData= loanScoreResultRepository.findByRecordId(loanScoreDto.getRecordId());
+            modelMapper.map(loanScoreDto, requestData);
+            requestData.setLastModified(new Date());
+            loanScoreResultRepository.save(requestData);
         }
         else {
-            loanScoreResult = modelMapper.map(request, LoanScoreResult.class);
-            loanScoreResultRepository.save(loanScoreResult);
+            requestData = modelMapper.map(loanScoreDto, LoanScoreResult.class);
+            requestData.setCreationTime(new Date());
+            loanScoreResultRepository.save(requestData);
         }
         if(request.getRecordId()==null){
-            loanScoreResult.setRecordId(String.valueOf(loanScoreResult.getId().getTimestamp()));
+            requestData.setRecordId(String.valueOf(requestData.getId().getTimestamp()));
         }
-        loanScoreResultRepository.save(loanScoreResult);
-        loanScoreResultDto=modelMapper.map(loanScoreResult, LoanScoreResultDto.class);
-        loanScoreResultDto.setBaseUrl(ADMIN_LOANSCORE);
-        return loanScoreResultDto;
+        loanScoreResultRepository.save(requestData);
+        loanScoreResults.add(requestData);
+        request.setBaseUrl(ADMIN_LOANSCORE);
+        }
+        request.setLoanScoreDtos(modelMapper.map(loanScoreResults,List.class));
+        return request;
 
     }
 }
