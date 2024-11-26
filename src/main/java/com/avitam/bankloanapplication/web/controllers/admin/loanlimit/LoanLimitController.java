@@ -48,7 +48,7 @@ public class LoanLimitController extends BaseController {
 
     }
     @GetMapping("/get")
-    public LoanLimitWsDto getLoanType(@RequestBody LoanLimitWsDto request) {
+    public LoanLimitWsDto getLoanLimit(@RequestBody LoanLimitWsDto request) {
         LoanLimitWsDto loanLimitWsDto = new LoanLimitWsDto();
         List<LoanLimit> loanLimits = new ArrayList<>();
         for(LoanLimitDto loanLimitDto: request.getLoanLimitDtos()) {
@@ -60,27 +60,27 @@ public class LoanLimitController extends BaseController {
     }
 
     @PostMapping("/edit")
-    public LoanLimitWsDto createLoanScore(@RequestBody LoanLimitWsDto request){
+    public LoanLimitWsDto createLoanLimit(@RequestBody LoanLimitWsDto request){
         return loanLimitService.editLoanLimit(request);
     }
 
-    @PostMapping("/getedit")
-    public LoanLimitWsDto getActiveLoanScore(@RequestBody LoanLimitWsDto request){
-        LoanLimitWsDto loanLimitWsDto=new LoanLimitWsDto();
-        List<LoanLimit> loanLimitList=new ArrayList<>();
-        for(LoanLimitDto loanScoreResultDto: request.getLoanLimitDtos()){
-            loanLimitList.add(loanLimitRepository.findByRecordId(loanScoreResultDto.getRecordId()));
-        }
-        loanLimitWsDto.setLoanLimitDtos(modelMapper.map(loanLimitList, List.class));
-        loanLimitWsDto.setBaseUrl(ADMIN_LOANLIMIT);
-        return loanLimitWsDto;
-    }
+//    @PostMapping("/getedit")
+//    public LoanLimitWsDto getActiveLoanScore(@RequestBody LoanLimitWsDto request){
+//        LoanLimitWsDto loanLimitWsDto=new LoanLimitWsDto();
+//        List<LoanLimit> loanLimitList=new ArrayList<>();
+//        for(LoanLimitDto loanScoreResultDto: request.getLoanLimitDtos()){
+//            loanLimitList.add(loanLimitRepository.findByRecordId(loanScoreResultDto.getRecordId()));
+//        }
+//        loanLimitWsDto.setLoanLimitDtos(modelMapper.map(loanLimitList, List.class));
+//        loanLimitWsDto.setBaseUrl(ADMIN_LOANLIMIT);
+//        return loanLimitWsDto;
+//    }
 
 
     @PostMapping("/delete")
     public LoanLimitWsDto delete(@RequestBody LoanLimitWsDto loanLimitWsDto) {
-            for(LoanLimitDto loanScoreDto : loanLimitWsDto.getLoanLimitDtos()){
-                loanLimitRepository.deleteByRecordId(loanScoreDto.getRecordId());
+            for(LoanLimitDto loanLimitDto : loanLimitWsDto.getLoanLimitDtos()){
+                loanLimitRepository.deleteByRecordId(loanLimitDto.getRecordId());
             }
             loanLimitWsDto.setMessage("Data deleted successfully");
             loanLimitWsDto.setBaseUrl(ADMIN_LOANLIMIT);

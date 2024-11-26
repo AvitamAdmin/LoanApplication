@@ -1,69 +1,64 @@
 package com.avitam.bankloanapplication.service;
 
-import com.avitam.bankloanapplication.model.LoanScoreResult;
 import com.avitam.bankloanapplication.model.dto.NotificationDto;
-import com.avitam.bankloanapplication.model.entity.LoanApplication;
+import com.avitam.bankloanapplication.model.dto.NotificationWsDto;
 import com.avitam.bankloanapplication.repository.NotificationRepository;
 import com.avitam.bankloanapplication.model.entity.Notification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.Date;
+
+import java.util.ArrayList;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class NotificationService {
     private static final String ADMIN_NOTIFICATION = "/admin/notification";
-    private final NotificationRepository notificationRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
     @Autowired
     private ModelMapper modelMapper;
 
-    public NotificationService(NotificationRepository notificationRepository) {
-        this.notificationRepository = notificationRepository;
-    }
 
-    private Optional<Notification> findNotificationById(String id) {
-        return Optional.ofNullable(notificationRepository.findByRecordId(id));
-    }
+//    private Optional<Notification> findNotificationById(String id) {
+//        return Optional.ofNullable(notificationRepository.findByRecordId(id));
+//    }
+//
+//    public Notification getNotificationById(String id) {
+//        return findNotificationById(id).get();
+//    }
 
-    public Notification getNotificationById(String id) {
-        return findNotificationById(id).get();
-    }
-
-    public NotificationDto createNotification(NotificationDto request) {
+    public NotificationWsDto handelEdit(NotificationWsDto request) {
+        NotificationWsDto notificationWsDto = new NotificationWsDto();
         Notification notification=new Notification();
-        if(request.getRecordId()!=null){
-            notification=modelMapper.map(request,Notification.class);
-            notification=notificationRepository.findByRecordId(request.getRecordId());
-            modelMapper.map(notification,request);
+        List<NotificationDto> notificationDtos = request.getNotificationDtoList();
+        List<Notification> notifications= new ArrayList<>();
+        for(NotificationDto notificationDto:notificationDtos) {
+            if (notificationDto.getRecordId() != null) {
+                notification = notificationRepository.findByRecordId(notificationDto.getRecordId());
+                modelMapper.map(notificationDto, notification);
+                notificationRepository.save(notification);
+            } else {
+                notification = modelMapper.map(notificationDto, Notification.class);
+                notificationRepository.save(notification);
+            }
+            if (request.getRecordId() == null) {
+                notification.setRecordId(String.valueOf(notification.getId().getTimestamp()));
+            }
             notificationRepository.save(notification);
-        }else{
-            notification=modelMapper.map(request, Notification.class);
-            Instant now = Instant.now();
-            notification.setCreationTime(Date.from(now));  // Save in UTC
-            notification.setStatus(true);
-            notificationRepository.save(notification);
+            notifications.add(notification);
+            request.setBaseUrl(ADMIN_NOTIFICATION);
+
         }
-        notificationRepository.save(notification);
-        if(request.getRecordId()==null){
-            notification.setRecordId(String.valueOf(notification.getId().getTimestamp()));
-            notificationRepository.save(notification);
-        }
-        request.setBaseUrl(ADMIN_NOTIFICATION);
-        request.setMessage("Data saved Successfully");
+        request.setNotificationDtoList(modelMapper.map(notifications,List.class));
         return request;
     }
 
 
-        public String sendMessageForResult(LoanApplication loanApplication) {
-        String resultMessage = "Your loan application is " + loanApplication.getStatus() ;
-//       if(loanApplication.getLoan() == LoanScoreResult.APPROVED) {
-//            resultMessage += " and your credit limit is " + creditApplication.getCreditLimit() + " TL.";
-//        }
 
-        return "Notification message is sent to " + " number with the message : " + resultMessage ;
-    }
+
 
 }

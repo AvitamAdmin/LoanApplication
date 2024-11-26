@@ -2,7 +2,6 @@ package com.avitam.bankloanapplication.web.controllers.admin.loanstatus;
 
 import com.avitam.bankloanapplication.model.dto.*;
 import com.avitam.bankloanapplication.model.entity.LoanStatus;
-import com.avitam.bankloanapplication.model.entity.LoanType;
 import com.avitam.bankloanapplication.repository.LoanStatusRepository;
 import com.avitam.bankloanapplication.service.LoanStatusService;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
@@ -29,7 +28,7 @@ public class LoanStatusController extends BaseController {
     private static final String ADMIN_LOANSTATUS= "/admin/loanStatus";
 
     @PostMapping
-    public LoanStatusWsDto getAllLoanTypes(@RequestBody LoanStatusWsDto loanStatusWsDto){
+    public LoanStatusWsDto getAllLoanStatus(@RequestBody LoanStatusWsDto loanStatusWsDto){
         Pageable pageable=getPageable(loanStatusWsDto.getPage(),loanStatusWsDto.getSizePerPage(),loanStatusWsDto.getSortDirection(),loanStatusWsDto.getSortField());
         LoanStatusDto loanTypeDto = CollectionUtils.isNotEmpty(loanStatusWsDto.getLoanStatusDtos()) ? loanStatusWsDto.getLoanStatusDtos().get(0) : new LoanStatusDto();
         LoanStatus loanStatus = modelMapper.map(loanStatusWsDto, LoanStatus.class);
@@ -42,7 +41,7 @@ public class LoanStatusController extends BaseController {
 
     }
     @GetMapping("/get")
-    public LoanStatusWsDto getLoanType(@RequestBody LoanStatusWsDto request) {
+    public LoanStatusWsDto getLoanStatus(@RequestBody LoanStatusWsDto request) {
         LoanStatusWsDto loanStatusWsDto = new LoanStatusWsDto();
         List<LoanStatus> loanStatuses = new ArrayList<>();
         for(LoanStatusDto loanStatusDto: request.getLoanStatusDtos()) {

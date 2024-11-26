@@ -14,6 +14,6 @@ import java.util.Optional;
 public class NotificationDto extends CommonDto  {
 
     private String text;
-    private List<String> notifications;
+
 
 }

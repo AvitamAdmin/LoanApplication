@@ -10,7 +10,5 @@ public interface LoanLimitRepository extends MongoRepository<LoanLimit,String> {
 
     LoanLimit findByRecordId(String recordId);
 
-    LoanLimit findByName(String name);
-
     void deleteByRecordId(String id);
 }

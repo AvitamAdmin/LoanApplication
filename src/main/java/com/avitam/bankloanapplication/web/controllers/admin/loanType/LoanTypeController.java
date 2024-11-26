@@ -62,8 +62,8 @@ public class LoanTypeController extends BaseController {
 
     @PostMapping("/delete")
     public LoanTypeWsDto delete(@RequestBody LoanTypeWsDto loanTypeWsDto) {
-        for (String id : loanTypeWsDto.getRecordId().split(",")) {
-            loanTypeRepository.deleteByRecordId(id);
+        for(LoanTypeDto loanTypeDto :loanTypeWsDto.getLoanTypeDtoList()){
+            loanTypeRepository.deleteByRecordId(loanTypeDto.getRecordId());
         }
         loanTypeWsDto.setMessage("Data deleted successfully");
         loanTypeWsDto.setBaseUrl(ADMIN_LOANTYPE);

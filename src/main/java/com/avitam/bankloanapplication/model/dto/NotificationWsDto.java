@@ -6,16 +6,15 @@ import lombok.Setter;
 import lombok.ToString;
 
 
+import java.util.List;
 
-@Getter
 @Setter
-@ToString
+@Getter
 @NoArgsConstructor
-public class LoanLimitDto extends CommonDto{
+@ToString
+public class NotificationWsDto extends CommonWsDto{
+    List<NotificationDto> notificationDtoList;
 
-    private String description;
-    private double loanLimitAmount;
-    private double incomeLimit;
 
 
 }
