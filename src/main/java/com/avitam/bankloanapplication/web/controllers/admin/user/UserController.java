@@ -1,8 +1,5 @@
 package com.avitam.bankloanapplication.web.controllers.admin.user;
 
-
-import com.avitam.bankloanapplication.model.dto.UserDataDTO;
-import com.avitam.bankloanapplication.model.dto.UserLoginDTO;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.service.UserService;
 

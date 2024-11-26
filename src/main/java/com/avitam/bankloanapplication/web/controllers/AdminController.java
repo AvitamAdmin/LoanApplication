@@ -1,12 +1,14 @@
 package com.avitam.bankloanapplication.web.controllers;
 
-import com.avitam.bankloanapplication.model.dto.CustomerDTO;
 import com.avitam.bankloanapplication.core.service.CoreService;
 import com.avitam.bankloanapplication.core.service.UserService;
+import com.avitam.bankloanapplication.model.dto.*;
 import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.repository.UserRepository;
+import org.apache.commons.collections4.CollectionUtils;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/user")
@@ -32,69 +37,70 @@ public class AdminController extends BaseController{
     private RoleRepository roleRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("")
     @ResponseBody
-    public CustomerDTO getAllUsers(@RequestBody CustomerDTO userDto) {
-        Pageable pageable = getPageable(userDto.getPage(), userDto.getSizePerPage(), userDto.getSortDirection(), userDto.getSortField());
-        Customer user = userDto.getCustomer();
-        Page<Customer> page = isSearchActive(user) != null ? customerRepository.findAll(Example.of(user), pageable) : customerRepository.findAll(pageable);
-        userDto.setCustomerList(page.getContent());
-        userDto.setTotalPages(page.getTotalPages());
-        userDto.setTotalRecords(page.getTotalElements());
-        userDto.setBaseUrl(ADMIN_USER);
-        return userDto;
+    public CustomerWsDto getAllUsers(@RequestBody CustomerWsDto customerWsDto) {
+        Pageable pageable=getPageable(customerWsDto.getPage(),customerWsDto.getSizePerPage(),customerWsDto.getSortDirection(),customerWsDto.getSortField());
+        CustomerDto customerDto = CollectionUtils.isNotEmpty(customerWsDto.getCustomerDtos()) ? customerWsDto.getCustomerDtos().get(0) : new CustomerDto();
+        Customer customer = modelMapper.map(customerDto, Customer.class);
+        Page<Customer> page=isSearchActive(customer) !=null ? customerRepository.findAll(Example.of(customer),pageable) : customerRepository.findAll(pageable);
+        customerWsDto.setCustomerDtos(modelMapper.map(page.getContent(), List.class));
+        customerWsDto.setBaseUrl(ADMIN_USER);
+        customerWsDto.setTotalPages(page.getTotalPages());
+        customerWsDto.setTotalRecords(page.getTotalElements());
+        return customerWsDto;
     }
 
     @GetMapping("/get")
     @ResponseBody
-    public CustomerDTO getActiveUserList() {
-        CustomerDTO userDto = new CustomerDTO();
-        userDto.setCustomerList(customerRepository.findByStatusOrderByIdentifier(true));
-        userDto.setBaseUrl(ADMIN_USER);
-        return userDto;
+    public CustomerWsDto getLoanType(@RequestBody CustomerWsDto request) {
+        CustomerWsDto customerWsDto = new CustomerWsDto();
+        List<Customer> customers = new ArrayList<>();
+        for(CustomerDto customerDto: request.getCustomerDtos()) {
+            customers.add(customerRepository.findByRecordId(customerDto.getRecordId()));
+        }
+        customerWsDto.setCustomerDtos(modelMapper.map(customers,List.class));
+        customerWsDto.setBaseUrl(ADMIN_USER);
+
+        return customerWsDto;
     }
 
     @PostMapping("/getedit")
     @ResponseBody
-    public CustomerDTO editUser(@RequestBody CustomerDTO request) {
-        CustomerDTO userDto = new CustomerDTO();
-        Customer user = customerRepository.findByRecordId(userDto.getRecordId());
-        userDto.setCustomer(user);
-        userDto.setBaseUrl(ADMIN_USER);
-        return userDto;
+    public CustomerWsDto editLoanApplication(@RequestBody CustomerWsDto request) {
+        CustomerWsDto customerWsDto = new CustomerWsDto();
+        List<Customer> customers=new ArrayList<>();
+        for(CustomerDto customerDto:request.getCustomerDtos()) {
+            customers.add(customerRepository.findByRecordId(customerDto.getRecordId()));
+        }
+        customerWsDto.setCustomerDtos(modelMapper.map(customers,List.class));
+        customerWsDto.setBaseUrl(ADMIN_USER);
+        return customerWsDto;
     }
 
     @PostMapping("/edit")
     @ResponseBody
-    public CustomerDTO save(@RequestBody CustomerDTO request) {
+    public CustomerDto save(@RequestBody CustomerDto request) {
 
         userService.save(request);
         return request;
     }
 
-    @GetMapping("/add")
-    @ResponseBody
-    public CustomerDTO addUser() {
-        CustomerDTO userDto=new CustomerDTO();
-        userDto.setCustomerList(customerRepository.findByStatusOrderByIdentifier(true));
-        userDto.setBaseUrl(ADMIN_USER);
-        return userDto;
-    }
-
     @PostMapping("/delete")
     @ResponseBody
-    public CustomerDTO deleteUser(@RequestBody CustomerDTO userDto) {
+    public CustomerWsDto deleteUser(@RequestBody CustomerWsDto customerWsDto) {
 
-        for (String id : userDto.getRecordId().split(",")) {
-            customerRepository.deleteByRecordId(id);
+        for (CustomerDto customerDto : customerWsDto.getCustomerDtos()) {
+            customerRepository.deleteByRecordId(customerDto.getRecordId());
         }
-        userDto.setBaseUrl(ADMIN_USER);
-        userDto.setMessage("Data Deleted Successfully");
-        return userDto;
+        customerWsDto.setBaseUrl(ADMIN_USER);
+        customerWsDto.setMessage("Data Deleted Successfully");
+        return customerWsDto;
     }
 
 
