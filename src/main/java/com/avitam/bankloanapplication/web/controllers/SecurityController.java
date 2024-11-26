@@ -4,11 +4,10 @@ package com.avitam.bankloanapplication.web.controllers;
 import com.avitam.bankloanapplication.core.Utility;
 import com.avitam.bankloanapplication.core.service.SecurityService;
 import com.avitam.bankloanapplication.core.service.UserService;
-import com.avitam.bankloanapplication.model.dto.CustomerDTO;
+import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.repository.UserRepository;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -139,7 +138,7 @@ public class SecurityController {
 
     @PostMapping("/register")
     @ResponseBody
-    public CustomerDTO processRegister(@RequestBody CustomerDTO request) {
+    public CustomerDto processRegister(@RequestBody CustomerDto request) {
        userService.save(request);
        request.setMessage("Registration Successful!!");
        return request;

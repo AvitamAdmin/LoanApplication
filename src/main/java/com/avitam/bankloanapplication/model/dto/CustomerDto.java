@@ -1,17 +1,14 @@
-package com.avitam.bankloanapplication.model.entity;
+package com.avitam.bankloanapplication.model.dto;
 
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-@Document("customer")
+public class CustomerDto extends CommonDto{
 
-public class Customer extends BaseEntity{
     private String nationalIdentityNumber;
 
     private String firstName;
@@ -35,5 +32,6 @@ public class Customer extends BaseEntity{
     private List<String> loanApplicationId;
 
     private List<String> customerList;
+
 
 }

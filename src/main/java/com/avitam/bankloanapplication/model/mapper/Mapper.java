@@ -1,11 +1,11 @@
 package com.avitam.bankloanapplication.model.mapper;
 
-import com.avitam.bankloanapplication.model.dto.CustomerDTO;
+import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.avitam.bankloanapplication.model.entity.Customer;
 
 public class Mapper {
-    public static CustomerDTO toDto(Customer customer) {
-        CustomerDTO customerDTO = new CustomerDTO();
+    public static CustomerDto toDto(Customer customer) {
+        CustomerDto customerDTO = new CustomerDto();
         //customerDTO.setId(customer.getId());
 //        customerDTO.setNationalIdentityNumber(customer.getNationalIdentityNumber());
 //        customerDTO.setFirstName(customer.getFirstName());
@@ -20,7 +20,7 @@ public class Mapper {
         return customerDTO;
     }
 
-    public static Customer toEntity(CustomerDTO customerDTO) {
+    public static Customer toEntity(CustomerDto customerDTO) {
         Customer customer = new Customer();
         //customer.setId(customerDTO.getId());
 //        customer.setNationalIdentityNumber(customerDTO.getNationalIdentityNumber());

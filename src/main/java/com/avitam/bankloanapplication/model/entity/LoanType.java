@@ -1,6 +1,6 @@
 package com.avitam.bankloanapplication.model.entity;
 
-import com.avitam.bankloanapplication.model.entity.BaseEntity;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

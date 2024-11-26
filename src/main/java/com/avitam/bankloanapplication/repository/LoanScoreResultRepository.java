@@ -13,4 +13,6 @@ public interface LoanScoreResultRepository extends MongoRepository<LoanScoreResu
     List<LoanScoreResult> findByStatusOrderByIdentifier(boolean b);
 
     List<LoanScoreResult> findByStatus(boolean b);
+
+    LoanScoreResult findByName(String approved);
 }

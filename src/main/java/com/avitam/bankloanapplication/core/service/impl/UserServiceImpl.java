@@ -1,7 +1,7 @@
 package com.avitam.bankloanapplication.core.service.impl;
 
 import com.avitam.bankloanapplication.model.Role;
-import com.avitam.bankloanapplication.model.dto.CustomerDTO;
+import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.avitam.bankloanapplication.core.service.CoreService;
 import com.avitam.bankloanapplication.core.service.UserService;
 import com.avitam.bankloanapplication.model.entity.Customer;
@@ -12,7 +12,6 @@ import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.repository.UserRepository;
 import com.avitam.bankloanapplication.repository.VerificationTokenRepository;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -47,7 +45,7 @@ public class UserServiceImpl implements UserService {
     CustomerRepository customerRepository;
 
     @Override
-    public void save( CustomerDTO request) {
+    public void save( CustomerDto request) {
         Customer customer=new Customer();
         if(request.getRecordId()!=null)
         {
@@ -55,10 +53,9 @@ public class UserServiceImpl implements UserService {
             modelMapper.map(request, customer);
         }
         else {
-            customer = modelMapper.map(request.getCustomer(),Customer.class);
+            customer = modelMapper.map(request,Customer.class);
             //customer =request.getCustomer();
-           // customer.setCreationTime(new Date());
-            customer.setLoanScore(1000);
+            customer.setCreationTime(new Date());
             customerRepository.save( customer);
             }
         //customer.setLastModified(new Date());
@@ -72,7 +69,7 @@ public class UserServiceImpl implements UserService {
                 customer.setRecordId(String.valueOf(customer.getId().getTimestamp()));
             }
             customerRepository.save(customer);
-            request.setCustomer(customer);
+            request=(modelMapper.map(customer,CustomerDto.class));
             request.setBaseUrl(ADMIN_USER);
     }
 

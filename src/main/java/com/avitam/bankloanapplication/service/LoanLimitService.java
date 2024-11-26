@@ -2,10 +2,7 @@ package com.avitam.bankloanapplication.service;
 
 import com.avitam.bankloanapplication.model.dto.LoanLimitDto;
 import com.avitam.bankloanapplication.model.dto.LoanLimitWsDto;
-import com.avitam.bankloanapplication.model.dto.LoanStatusDto;
-import com.avitam.bankloanapplication.model.dto.LoanStatusWsDto;
 import com.avitam.bankloanapplication.model.entity.LoanLimit;
-import com.avitam.bankloanapplication.model.entity.LoanStatus;
 import com.avitam.bankloanapplication.repository.LoanLimitRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,7 @@ public class LoanLimitService {
     private static final String ADMIN_LOANLIMIT = "/admin/loanLimit";
 
     public LoanLimitWsDto editLoanLimit(LoanLimitWsDto request) {
-        LoanLimitWsDto loanLimitWsDto = new LoanLimitWsDto();
+
         LoanLimit loanLimit=new LoanLimit();
         List<LoanLimitDto> loanStatusDtos = request.getLoanLimitDtos();
         List<LoanLimit> loanLimits = new ArrayList<>();

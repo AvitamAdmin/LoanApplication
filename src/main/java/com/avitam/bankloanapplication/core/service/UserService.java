@@ -1,7 +1,6 @@
 package com.avitam.bankloanapplication.core.service;
 
-
-import com.avitam.bankloanapplication.model.dto.CustomerDTO;
+import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.model.entity.VerificationToken;
 
@@ -9,7 +8,7 @@ import com.avitam.bankloanapplication.model.entity.VerificationToken;
 public interface UserService {
 
 
-    void save(CustomerDTO request);
+    void save(CustomerDto request);
 
 
     User findByUserName(String userName);

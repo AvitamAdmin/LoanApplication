@@ -1,102 +1,72 @@
 package com.avitam.bankloanapplication.service;
 
-import com.avitam.bankloanapplication.exception.CustomerNotFoundException;
+import com.avitam.bankloanapplication.core.service.CoreService;
+import com.avitam.bankloanapplication.model.dto.CustomerDto;
+import com.avitam.bankloanapplication.model.dto.CustomerWsDto;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
-import com.avitam.bankloanapplication.model.dto.CustomerDTO;
 import com.avitam.bankloanapplication.model.entity.Customer;
-import com.avitam.bankloanapplication.model.mapper.Mapper;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class CustomerService {
-    private final CustomerRepository customerRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    private CoreService coreService;
+//    @Autowired
+//    private BaseService baseService;
+    @Autowired
+    private CustomerRepository customerRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+    public static final String ADMIN_CUSTOMER = "/admin/customer";
+
+    public Customer findByRecordId(String recordId) {
+        return customerRepository.findByRecordId(recordId);
     }
 
-    private Optional<Customer> findCustomerByNationalIdentityNumber(String nationalIdentityNumber) {
-        return Optional.ofNullable(customerRepository.findByNationalIdentityNumber(nationalIdentityNumber).orElseThrow(() ->
-                new CustomerNotFoundException("Related customer with National Identity Number: " + nationalIdentityNumber + " not found")));
+    public void deleteByRecordId(String recordId) {
+        customerRepository.deleteByRecordId(recordId);
     }
 
-    public CustomerDTO getCustomerByNationalIdentityNumber(String nationalIdentityNumber) {
-        return Mapper.toDto(findCustomerByNationalIdentityNumber(nationalIdentityNumber).get());
+    public CustomerWsDto handleEdit(CustomerWsDto request) {
+        CustomerWsDto customerWsDto = new CustomerWsDto();
+        Customer customer=new Customer();
+        List<CustomerDto> customerDtos = request.getCustomerDtos();
+        List<Customer> customers = new ArrayList<>();
+        for(CustomerDto customerDto: customerDtos) {
 
-    }
-
-    public List<CustomerDTO> getAllCustomers() {
-        return Optional.ofNullable(customerRepository.findAll())
-                .orElseGet(Collections::emptyList)
-                .stream()
-                .map(Mapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public void addCustomer(CustomerDTO customerDTO) {
-        customerRepository.save(Mapper.toEntity(customerDTO));
-    }
-
-    public void updateCustomer(String nationalIdentityNumber, CustomerDTO customerDTO) {
-        var customerByNationalIdentityNumber = findCustomerByNationalIdentityNumber(nationalIdentityNumber);
-        customerByNationalIdentityNumber.ifPresent(customer -> {
- //          customer.setNationalIdentityNumber(customerDTO.getNationalIdentityNumber());
-//            customer.setFirstName(customerDTO.getFirstName());
-//            customer.setLastName(customerDTO.getLastName());
-//            customer.setPhone(customerDTO.getPhone());
-//            customer.setEmail(customerDTO.getEmail());
-//            customer.setMonthlyIncome(customerDTO.getMonthlyIncome());
-//            customer.setGender(customerDTO.getGender());
-//            customer.setAge(customerDTO.getAge());
+            if (customerDto.getRecordId() != null) {
+                customer = customerRepository.findByRecordId(customerDto.getRecordId());
+                modelMapper.map(customerDto, customer);
+                customerRepository.save(customer);
+            } else {
+                customer = modelMapper.map(customerDto, Customer.class);
+                customer.setCreationTime(new Date());
+                customer.setStatus(true);
+                customerRepository.save(customer);
+            }
+            if (request.getRecordId() == null) {
+                customer.setRecordId(String.valueOf(customer.getId().getTimestamp()));
+            }
             customerRepository.save(customer);
-        });
+            customers.add(customer);
+            request.setBaseUrl(ADMIN_CUSTOMER);
+        }
+        request.setCustomerDtos(modelMapper.map(customers,List.class));
+        return request;
     }
 
-    public void deleteCustomer(String nationalIdentityNumber) {
-        var customerByNationalIdentityNumber = findCustomerByNationalIdentityNumber(nationalIdentityNumber);
-        customerByNationalIdentityNumber.ifPresent(customerRepository::delete);
+    public void updateByRecordId(String recordId) {
+
+        Customer  customerOptional=customerRepository.findByRecordId(recordId);
+        if(customerOptional!=null)
+        {
+            customerRepository.save(customerOptional);
+        }
+
     }
-
-    public void updateCustomerPartially(String nationalIdentityNumber, Map<Object, Object> objectMap) {
-        var customerByNationalIdentityNumber = findCustomerByNationalIdentityNumber(nationalIdentityNumber);
-        customerByNationalIdentityNumber.ifPresent(customer -> objectMap.forEach((key, value) -> {
-            //use reflection to get field and set it to value
-            Field field = ReflectionUtils.findField(Customer.class, (String) key);
-            field.setAccessible(true);
-            ReflectionUtils.setField(field, customer, value);
-            customerRepository.save(customer);
-        }));
-    }
-
-//    public void addLoanApplicationToCustomer(Long loanApplicationId, String nationalIdentityNumber) {
-//        var customerByNationalIdentityNumber = findCustomerByNationalIdentityNumber(nationalIdentityNumber);
-//        var loanApplicationById = loanApplicationRepository.findById(loanApplicationId);
-//
-//        customerByNationalIdentityNumber.ifPresent(customer -> {
-//            LoanApplication loanApplication = loanApplicationById.get();
-//            customer.getLoanApplications().add(loanApplication);
-//            customer.setLoanApplications(customer.getLoanApplications());
-//            customerRepository.save(customer);
-//        });
-//    }
-
-//    public List<LoanApplication> getCustomerLoanApplications(String nationalIdentityNumber) {
-//        var customerByNationalIdentityNumber = findCustomerByNationalIdentityNumber(nationalIdentityNumber);
-//        return customerByNationalIdentityNumber.get().getLoanApplications();
-//    }
-
-//    public List<CustomerLoanApplicationResponse> getJoinInformation(){
-//        return customerRepository.getJoinInformation();
-//    }
-
-
-
 }

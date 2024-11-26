@@ -1,58 +1,98 @@
 package com.avitam.bankloanapplication.web.controllers.admin.customer;
 
-import com.avitam.bankloanapplication.model.dto.CustomerDTO;
+import com.avitam.bankloanapplication.core.service.CoreService;
+import com.avitam.bankloanapplication.model.dto.*;
+import com.avitam.bankloanapplication.model.entity.Customer;
+import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.service.CustomerService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.avitam.bankloanapplication.web.controllers.BaseController;
+import org.apache.commons.collections4.CollectionUtils;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/customer")
-public class CustomerController {
-    private final CustomerService customerService;
+@RequestMapping("/admin/customer")
+public class CustomerController extends BaseController {
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    private CoreService coreService;
+    @Autowired
+    private CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
+    public static final String ADMIN_CUSTOMER = "/admin/customer";
+
+    @PostMapping
+    @ResponseBody
+    public CustomerWsDto getAllCustomers(@RequestBody CustomerWsDto customerWsDto){
+
+        Pageable pageable=getPageable(customerWsDto.getPage(),customerWsDto.getSizePerPage(),customerWsDto.getSortDirection(),customerWsDto.getSortField());
+        CustomerDto customerDto = CollectionUtils.isNotEmpty(customerWsDto.getCustomerDtos()) ? customerWsDto.getCustomerDtos().get(0) : new CustomerDto();
+        Customer customer = modelMapper.map(customerWsDto, Customer.class);
+        Page<Customer> page=isSearchActive(customer) !=null ? customerRepository.findAll(Example.of(customer),pageable) : customerRepository.findAll(pageable);
+        customerWsDto.setCustomerDtos(modelMapper.map(page.getContent(), List.class));
+        customerWsDto.setTotalPages(page.getTotalPages());
+        customerWsDto.setTotalRecords(page.getTotalElements());
+        customerWsDto.setBaseUrl(ADMIN_CUSTOMER);
+        return customerWsDto;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        return new ResponseEntity(customerService.getAllCustomers(), HttpStatus.OK);
+    @GetMapping("/get")
+    @ResponseBody
+    public CustomerWsDto getActiveCustomerList(@RequestBody CustomerWsDto request) {
+        CustomerWsDto customerWsDto = new CustomerWsDto();
+        List<Customer> customers = new ArrayList<>();
+        for(CustomerDto customerDto: request.getCustomerDtos()) {
+            customers.add(customerRepository.findByRecordId(customerDto.getRecordId()));
+        }
+        customerWsDto.setCustomerDtos(modelMapper.map(customers,List.class));
+        customerWsDto.setBaseUrl(ADMIN_CUSTOMER);
+        return customerWsDto;
     }
 
+//    @PostMapping("/getedit")
+//    @ResponseBody
+//    public CustomerWsDto editCustomer(@RequestBody CustomerWsDto request) {
+//        CustomerWsDto customerDto = new CustomerDto();
+//        Customer customer = customerRepository.findByRecordId(request.getRecordId());
+//        customerDto=modelMapper.map(customer, CustomerDto.class);
+//        customerDto.setBaseUrl(ADMIN_CUSTOMER);
+//        return customerDto;
+//    }
 
-    @GetMapping("/get/{nationalIdentityNumber}")
-    public ResponseEntity<CustomerDTO> getCustomerByNationalIdentityNumber(@PathVariable String nationalIdentityNumber) {
-        return new ResponseEntity(customerService.getCustomerByNationalIdentityNumber(nationalIdentityNumber), HttpStatus.OK);
+    @PostMapping("/edit")
+    @ResponseBody
+    public CustomerWsDto handleEdit(@RequestBody CustomerWsDto request) {
+        return customerService.handleEdit(request);
     }
 
-
-    @PostMapping("/add")
-    public ResponseEntity addCustomer(@RequestBody CustomerDTO customerDTO) {
-        customerService.addCustomer(customerDTO);
-        return new ResponseEntity(HttpStatus.CREATED);
+    @GetMapping("/add")
+    @ResponseBody
+    public CustomerDto addCustomer() {
+        CustomerDto customerDto = new CustomerDto();
+        //customerDto.setCustomerList(customerRepository.findByStatusOrderByIdentifier(true));
+        customerDto.setBaseUrl(ADMIN_CUSTOMER);
+        return customerDto;
     }
 
-    @PutMapping("/update/{nationalIdentityNumber}")
-    public ResponseEntity updateCustomer(@PathVariable String nationalIdentityNumber, @RequestBody CustomerDTO customerDTO) {
-        customerService.updateCustomer(nationalIdentityNumber, customerDTO);
-        return new ResponseEntity(HttpStatus.OK);
+    @PostMapping("/delete")
+    @ResponseBody
+    public CustomerWsDto deleteCustomer(@RequestBody CustomerWsDto customerWsDto) {
+        for (CustomerDto customerDto : customerWsDto.getCustomerDtos()) {
+            customerRepository.deleteByRecordId(customerDto.getRecordId());
+        }
+        customerWsDto.setMessage("Data deleted successfully");
+        customerWsDto.setBaseUrl(ADMIN_CUSTOMER);
+        return customerWsDto;
     }
-
-    @PatchMapping("/update/{nationalIdentityNumber}")
-    public ResponseEntity updateCustomerPartially(@PathVariable String nationalIdentityNumber, @RequestBody Map<Object, Object> objectMap) {
-        customerService.updateCustomerPartially(nationalIdentityNumber, objectMap);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @DeleteMapping("/delete/{nationalIdentityNumber}")
-    public ResponseEntity deleteCustomer(@PathVariable String nationalIdentityNumber) {
-        customerService.deleteCustomer(nationalIdentityNumber);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
 
 }

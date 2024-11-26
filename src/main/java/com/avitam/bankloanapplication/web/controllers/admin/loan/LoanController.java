@@ -1,90 +1,77 @@
 package com.avitam.bankloanapplication.web.controllers.admin.loan;
 
 import com.avitam.bankloanapplication.model.dto.LoanDto;
+import com.avitam.bankloanapplication.model.dto.LoanWsDto;
 import com.avitam.bankloanapplication.model.entity.Loan;
 import com.avitam.bankloanapplication.repository.LoanRepository;
 import com.avitam.bankloanapplication.service.LoanService;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
-import org.checkerframework.checker.units.qual.K;
+import org.apache.commons.collections4.CollectionUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/loan")
 public class LoanController extends BaseController {
     @Autowired
     private LoanService loanService;
-
-    @Autowired
-    private LoanDto loanDto;
-
     @Autowired
     private LoanRepository loanRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     private static final String ADMIN_LOAN= "/admin/loan";
 
 
     @PostMapping
-
-    public LoanDto getAllLoan(@RequestBody LoanDto loanDto){
-        Pageable pageable=getPageable(loanDto.getPage(),loanDto.getSizePerPage(),loanDto.getSortDirection(),loanDto.getSortField());
-        Loan loan=loanDto.getLoan();
+    public LoanWsDto getAllLoan(@RequestBody LoanWsDto loanWsDto){
+        Pageable pageable=getPageable(loanWsDto.getPage(),loanWsDto.getSizePerPage(),loanWsDto.getSortDirection(),loanWsDto.getSortField());
+        LoanDto loanDto= CollectionUtils.isNotEmpty(loanWsDto.getLoanDtoList()) ? loanWsDto.getLoanDtoList().get(0) : new LoanDto(); ;
+        Loan loan=modelMapper.map(loanDto,Loan.class);
         Page<Loan> page=isSearchActive(loan)!=null ? loanRepository.findAll(Example.of(loan),pageable) : loanRepository.findAll(pageable);
-        loanDto.setLoanList(page.getContent());
-        loanDto.setBaseUrl(ADMIN_LOAN);
-        loanDto.setTotalPages(page.getTotalPages());
-        loanDto.setTotalRecords(page.getTotalElements());
-        return loanDto;
+        loanWsDto.setLoanDtoList(modelMapper.map(page.getContent(), List.class));
+        loanWsDto.setBaseUrl(ADMIN_LOAN);
+        loanWsDto.setTotalPages(page.getTotalPages());
+        loanWsDto.setTotalRecords(page.getTotalElements());
+        return loanWsDto;
 
 
     }
 
     @PostMapping("/edit")
-
-    public LoanDto createLoan(@RequestBody LoanDto request) {
+    public LoanWsDto createLoan(@RequestBody LoanWsDto request) {
         return loanService.createLoan(request);
 
     }
-    @PostMapping("/update/{loanId}")
-
-    public LoanDto updateLoan(@RequestBody LoanDto request) {
-        return loanService.createLoan(request);
-    }
-
     @PostMapping("/delete")
-
-    public LoanDto deleteLoan(@RequestBody LoanDto request){
-        for (String id :loanDto.getRecordId().split(",")){
-            loanRepository.deleteByRecordId(id);
+    public LoanWsDto deleteLoan(@RequestBody LoanWsDto request){
+        for (LoanDto loanDto :request.getLoanDtoList()){
+          loanRepository.deleteByRecordId(loanDto.getRecordId());
         }
-        loanDto.setMessage("Data deleted Successfully");
-        loanDto.setBaseUrl(ADMIN_LOAN);
-        return loanDto;
+        request.setMessage("Data deleted Successfully");
+        request.setBaseUrl(ADMIN_LOAN);
+        return request;
 
     }
 
     @GetMapping("/get")
-    public LoanDto getLoanById(@RequestBody LoanDto request) {
-        LoanDto loanDto1 = new LoanDto();
-        Loan loan = loanRepository.findByRecordId(request.getRecordId());
-        loanDto1.setLoan(loan);
-        loanDto1.setBaseUrl(ADMIN_LOAN);
-        return loanDto1;
+    public LoanWsDto getLoanById(@RequestBody LoanWsDto request) {
+        LoanWsDto loanWsDto = new LoanWsDto();
+        List<Loan> loans=new ArrayList<>();
+        for(LoanDto loanDto : request.getLoanDtoList()) {
+             loans.add(loanRepository.findByRecordId(loanDto.getRecordId()));
+        }
+        loanWsDto.setLoanDtoList(modelMapper.map(loans,List.class));
+        loanWsDto.setBaseUrl(ADMIN_LOAN);
+        return loanWsDto;
     }
-
-
-
-
-
 
 //    //TODO: need enum-string fix in LoanService
 //    @PatchMapping("/update/{loanId}")

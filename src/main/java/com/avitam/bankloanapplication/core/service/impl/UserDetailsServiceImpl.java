@@ -1,7 +1,9 @@
 package com.avitam.bankloanapplication.core.service.impl;
 
 
+import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.model.entity.User;
+import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,18 +19,18 @@ import java.util.Set;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private UserRepository userRepository;
+    private CustomerRepository customerRepository;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String inputString) {
-        User user = userRepository.findByEmail(inputString);
-        User user1=userRepository.findByMobileNumber(inputString);
+        Customer user = customerRepository.findByEmail(inputString);
+        Customer user1=customerRepository.findByPhone(inputString);
         if ((user == null)&&(user1==null) ) throw new UsernameNotFoundException(inputString);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         if(user != null){
             return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), grantedAuthorities);
         }
-            return new org.springframework.security.core.userdetails.User(user1.getMobileNumber(), user1.getPassword(), grantedAuthorities);
+            return new org.springframework.security.core.userdetails.User(user1.getPhone(), user1.getPassword(), grantedAuthorities);
     }
 }

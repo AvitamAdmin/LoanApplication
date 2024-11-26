@@ -1,7 +1,7 @@
 package com.avitam.bankloanapplication.service;
 
-import com.avitam.bankloanapplication.exception.LoanNotFoundException;
 import com.avitam.bankloanapplication.model.dto.LoanDto;
+import com.avitam.bankloanapplication.model.dto.LoanWsDto;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.repository.LoanRepository;
 
@@ -9,11 +9,9 @@ import com.avitam.bankloanapplication.model.entity.Loan;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class LoanService {
@@ -32,26 +30,29 @@ public class LoanService {
     public static final String ADMIN_lOAN = "/admin/loan";
 
 
-    public LoanDto createLoan(LoanDto request) {
-        LoanDto loanDto = new LoanDto();
-        Loan loan = null;
-        if(request.getRecordId()!=null){
-            Loan requestData = request.getLoan();
-            loan= loanRepository.findByRecordId(request.getRecordId());
-            modelMapper.map(requestData, loan);
+    public LoanWsDto createLoan(LoanWsDto request) {
+        Loan loan = new Loan();
+        List<LoanDto> loanDtos=request.getLoanDtoList();
+        List<Loan> loans=new ArrayList<>();
+        for(LoanDto loanDto:loanDtos) {
+
+            if (loanDto.getRecordId() != null) {
+                loan = loanRepository.findByRecordId(request.getRecordId());
+                modelMapper.map(loanDto, loan);
+                loanRepository.save(loan);
+            } else {
+                loan = modelMapper.map(loanDto, Loan.class);
+                loanRepository.save(loan);
+            }
+            if (request.getRecordId() == null) {
+                loan.setRecordId(String.valueOf(loan.getId().getTimestamp()));
+            }
             loanRepository.save(loan);
+            loans.add(loan);
+            loanDto.setBaseUrl(ADMIN_lOAN);
         }
-        else {
-            loan = request.getLoan();
-            loanRepository.save(loan);
-        }
-        if(request.getRecordId()==null){
-            loan.setRecordId(String.valueOf(loan.getId().getTimestamp()));
-        }
-        loanRepository.save(loan);
-        loanDto.setLoan(loan);
-        loanDto.setBaseUrl(ADMIN_lOAN);
-        return loanDto;
+        request.setLoanDtoList(modelMapper.map(loans,List.class));
+        return request;
 
     }
 

@@ -1,121 +1,131 @@
 package com.avitam.bankloanapplication.service;
 
+import com.avitam.bankloanapplication.core.service.CoreService;
 import com.avitam.bankloanapplication.exception.InvalidLoanApplicationException;
-import com.avitam.bankloanapplication.exception.LoanNotFoundException;
-import com.avitam.bankloanapplication.repository.CustomerRepository;
-import com.avitam.bankloanapplication.repository.LoanApplicationRepository;
-import com.avitam.bankloanapplication.repository.LoanRepository;
-import com.avitam.bankloanapplication.model.LoanLimit;
-import com.avitam.bankloanapplication.model.LoanScoreResult;
-import com.avitam.bankloanapplication.model.LoanStatus;
-import com.avitam.bankloanapplication.model.LoanType;
+import com.avitam.bankloanapplication.model.dto.LoanApplicationDto;
+import com.avitam.bankloanapplication.model.dto.LoanApplicationWsDto;
+import com.avitam.bankloanapplication.model.dto.LoanDto;
+import com.avitam.bankloanapplication.repository.*;
+import com.avitam.bankloanapplication.model.entity.LoanLimit;
+import com.avitam.bankloanapplication.model.entity.LoanScoreResult;
+import com.avitam.bankloanapplication.model.entity.LoanStatus;
 import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.model.entity.Loan;
 import com.avitam.bankloanapplication.model.entity.LoanApplication;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
 public class LoanApplicationService {
 
-    private LoanRepository loanRepository;
-    private CustomerRepository customerRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    private CoreService coreService;
+//    @Autowired
+//    private BaseService baseService;
+    @Autowired
     private LoanApplicationRepository loanApplicationRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private LoanRepository loanRepository;
+    @Autowired
+    private LoanScoreResultRepository loanScoreResultRepository;
+    @Autowired
+    private LoanStatusRepository loanStatusRepository;
+    @Autowired
+    private LoanLimitRepository loanLimitRepository;
 
-    public LoanApplicationService(LoanRepository loanRepository, CustomerRepository customerRepository, LoanApplicationRepository loanApplicationRepository) {
-        this.loanRepository = loanRepository;
-        this.customerRepository = customerRepository;
-        this.loanApplicationRepository = loanApplicationRepository;
+    public static final String ADMIN_LOANAPPLICATION = "/admin/loanApplication";
+
+
+    public LoanApplicationWsDto handleEdit(LoanApplicationWsDto request) {
+       LoanApplication loanApplication = new LoanApplication();
+       List<LoanApplicationDto> loanApplicationDtos=request.getLoanApplicationDtos();
+       List<LoanApplication> loanApplications=new ArrayList<>();
+
+       for(LoanApplicationDto loanApplicationDto: loanApplicationDtos) {
+
+           if (loanApplicationDto.getRecordId() != null) {
+               loanApplication = loanApplicationRepository.findByRecordId(loanApplicationDto.getRecordId());
+               modelMapper.map(loanApplicationDto, loanApplication);
+               loanApplicationRepository.save(loanApplication);
+           } else {
+               loanApplication = modelMapper.map(loanApplicationDto, LoanApplication.class);
+               loanApplicationRepository.save(loanApplication);
+           }
+           if (request.getRecordId() == null) {
+               loanApplication.setRecordId(String.valueOf(loanApplication.getId().getTimestamp()));
+           }
+           loanApplicationRepository.save(loanApplication);
+           request.setBaseUrl(ADMIN_LOANAPPLICATION);
+
+           Customer customer = customerRepository.findByRecordId(loanApplicationDto.getCustomerId());
+           List<String> loanApplicationList = customer.getLoanApplicationId();
+           if (loanApplicationList == null) {
+               loanApplicationList = new ArrayList<>();
+           }
+           loanApplicationList.add(loanApplication.getRecordId());
+           customer.setLoanApplicationId(loanApplicationList);
+           customerRepository.save(customer);
+       }
+        return request;
     }
 
-    private Loan createLoan() {
-        var newLoan = new Loan(LoanType.PERSONAL, 0.0, LoanScoreResult.NOT_RESULTED, LoanStatus.ACTIVE, new Date());
-        loanRepository.save(newLoan);
-        return newLoan;
-    }
 
-    public void createLoanApplication(String nationalIdentityNumber) {
-        var customerByNationalIdentityNumber = customerRepository.findByNationalIdentityNumber(nationalIdentityNumber);
-        customerByNationalIdentityNumber.ifPresent(customer -> {
-            LoanApplication loanApplication = new LoanApplication(customerByNationalIdentityNumber.get(), createLoan());
-            loanApplicationRepository.save(loanApplication);
-        });
-    }
-    public Loan getLoanApplicationResult(String nationalIdentityNumber) {
-        LoanApplication finalizedApplication = finalizeLoanApplication(nationalIdentityNumber);
+    public LoanDto getLoanApplicationResult(LoanApplicationDto request) {
 
-        if (finalizedApplication.getLoan().getLoanScoreResult().equals(LoanScoreResult.NOT_RESULTED)) {
+        LoanDto loanDto = new LoanDto();
+        LoanApplication finalizedApplication = finalizeLoanApplication(request);
+        Loan loan = loanRepository.findByRecordId(finalizedApplication.getLoanId());
+        LoanScoreResult loanScoreResult = loanScoreResultRepository.findByRecordId(loan.getLoanScoreResultId());
+
+        if (loanScoreResult.getName().equalsIgnoreCase("NOT_RESULTED")) {
             throw new InvalidLoanApplicationException("!");
-        } else if (finalizedApplication.getLoan().getLoanScoreResult().equals(LoanScoreResult.REJECTED)) {
-            return finalizedApplication.getLoan();
+        } else if (loanScoreResult.getName().equalsIgnoreCase("REJECTED")) {
+            modelMapper.map(loan, loanDto);
+            return loanDto;
         }
-        return finalizedApplication.getLoan();
+        modelMapper.map(loan, loanDto);
+        return loanDto;
     }
-    private Loan loanLimitCalculator(LoanApplication loanApplication) {
-        var loan = loanApplication.getLoan();
-        var loanCustomer = loanApplication.getCustomer();
-        var loanScore = loanCustomer.getLoanScore();
-        var income = loanCustomer.getMonthlyIncome();
-        var loanMultiplier = loan.getCreditMultiplier();
 
-        var loanLimitCheck = (income >= LoanLimit.HIGHER.getLoanLimitAmount());
-        var loanScoreCheck = (loanScore >= LoanScoreResult.APPROVED.getLoanScoreLimit());
+    private LoanApplication finalizeLoanApplication(LoanApplicationDto request) {
 
-        if (loanScoreCheck) {
-            LoanLimit.SPECIAL.setLoanLimitAmount(income * loanMultiplier);
-            loan.setLoanLimit(LoanLimit.SPECIAL.getLoanLimitAmount());
-        } else if (loanLimitCheck) {
-            loan.setLoanLimit(LoanLimit.HIGHER.getLoanLimitAmount());
-        } else {
-            loan.setLoanLimit(LoanLimit.LOWER.getLoanLimitAmount());
+        Optional<Customer> customerOptional = Optional.ofNullable(customerRepository.findByRecordId(request.getCustomerId()));
+
+        for (String loanApplicationId : customerOptional.get().getLoanApplicationId()) {
+            LoanApplication loanApplication = loanApplicationRepository.findByRecordId(loanApplicationId);
+            if(loanApplication.getRecordId().equalsIgnoreCase(request.getRecordId())){
+                verifyLoan(loanApplication);
+            }
+
         }
-        return loan;
-    }
-
-    private void verifyLoan(LoanApplication loanApplication) {
-        var loanCustomer = loanApplication.getCustomer();
-
-        var loanToUpdate = getNotResultedLoanApplicationOfCustomer(loanCustomer);
-        if (loanToUpdate == null) return;
-        log.info("Getting loan application for result");
-
-        var loanScore = loanCustomer.getLoanScore();
-        var loanScoreForApproval = (loanScore >= LoanScoreResult.REJECTED.getLoanScoreLimit());
-
-        if (loanScoreForApproval) {
-            loanToUpdate.setLoanScoreResult(LoanScoreResult.APPROVED);
-            loanApplication.setLoan(loanToUpdate);
-            loanToUpdate = loanLimitCalculator(loanApplication);
-            //loanApplication.setLoan(loanToUpdate);
-        } else {
-            loanToUpdate.setLoanScoreResult(LoanScoreResult.REJECTED);
-            loanToUpdate.setLoanStatus(LoanStatus.INACTIVE);
+        // List<LoanApplication> loanApplicationList = new ArrayList<>();
+        LoanApplication loanApplication = new LoanApplication();
+        for (String loanApplicationId : customerOptional.get().getLoanApplicationId()) {
+            if(loanApplicationId.equalsIgnoreCase(request.getRecordId())) {
+                loanApplication = loanApplicationRepository.findByRecordId(loanApplicationId);
+                if (loanApplication.getCustomerId().equalsIgnoreCase(customerOptional.get().getRecordId())) {
+                    //loanApplicationList.add(loanApplication);
+                    return loanApplication;
+                }
+            }
         }
-        loanRepository.save(loanToUpdate);
-        log.info("resulted the application");
-        //TODO: modify sms
-        log.info("Sent sms result");
-    }
+        // return loanApplicationList.stream().findAny().orElseThrow((() -> new InvalidLoanApplicationException(".")));
+        return loanApplication;
 
-    private Loan getNotResultedLoanApplicationOfCustomer(Customer customer) {
-
-        var optionalLoan =
-                customer.getLoanApplications().stream()
-                        .filter(c -> c.getLoan().getLoanScoreResult().equals(LoanScoreResult.NOT_RESULTED))
-                        .findFirst();
-
-        return optionalLoan.isPresent() ? optionalLoan.get().getLoan() : null;
-
-    }
-
-    private LoanApplication finalizeLoanApplication(String nationalIdentityNumber) {
-        Optional<Customer> customerByNationalIdentityNumber = customerRepository.findByNationalIdentityNumber(nationalIdentityNumber);
-
-        if (customerByNationalIdentityNumber.isPresent()) {
+        //Optional<Customer> customerByNationalIdentityNumber = customerRepository.findByNationalIdentityNumber(nationalIdentityNumber);
+        /*if (customerByNationalIdentityNumber.isPresent()) {
             LoanApplication loanApplication1 = customerByNationalIdentityNumber.get().getLoanApplications().stream()
                     .findFirst()
                     .get();
@@ -126,19 +136,129 @@ public class LoanApplicationService {
                 .filter(loanApplication -> loanApplication.getCustomer() == customerByNationalIdentityNumber.get())
                 //.filter(loanApplication -> loanApplication.getLoan().getLoanStatus() == LoanStatus.ACTIVE)
                 .findAny()
-                .orElseThrow(() -> new InvalidLoanApplicationException("."));
+                .orElseThrow(() -> new InvalidLoanApplicationException("."));*/
     }
 
-    protected Optional<LoanApplication> findLoanApplicationById(Long id) {
-        return Optional.ofNullable(loanApplicationRepository.findById(id).orElseThrow(() ->
-                new LoanNotFoundException("Related loan with id: " + id + " not found")));
+    private void verifyLoan(LoanApplication loanApplication) {
+        String loanCustomer = loanApplication.getCustomerId();
+
+        Loan loanToUpdate = getNotResultedLoanApplicationOfCustomer(loanCustomer);
+        if (loanToUpdate == null) return;
+        log.info("Getting loan application for result");
+
+        Customer customer = customerRepository.findByRecordId(loanCustomer);
+
+        Integer loanScore = customer.getLoanScore();
+        LoanScoreResult loanScoreResult = loanScoreResultRepository.findByName("REJECTED");
+        boolean loanScoreForApproval = (loanScore >= loanScoreResult.getLoanScoreLimit());
+
+        if (loanScoreForApproval) {
+            LoanScoreResult loanScoreResult2 = loanScoreResultRepository.findByName("APPROVED");
+            loanToUpdate.setLoanScoreResultId(loanScoreResult2.getRecordId());
+            loanApplication.setLoanId(loanToUpdate.getRecordId());
+            loanRepository.save(loanToUpdate);
+            loanToUpdate = loanLimitCalculator(loanApplication);
+
+        } else {
+            loanToUpdate.setLoanScoreResultId(loanScoreResult.getRecordId());
+            LoanStatus loanStatus = loanStatusRepository.findByName("INACTIVE");
+            loanToUpdate.setLoanStatusId(loanStatus.getRecordId());
+            loanRepository.save(loanToUpdate);
+        }
+        loanRepository.save(loanToUpdate);
+        log.info("resulted the application");
+        //TODO: modify sms
+        log.info("Sent sms result");
     }
 
-    public LoanApplication getLoanApplicationById(Long loanApplicationId) {
-        return findLoanApplicationById(loanApplicationId).get();
+    private Loan loanLimitCalculator(LoanApplication loanApplication) {
+
+        Loan loan = loanRepository.findByRecordId(loanApplication.getLoanId());
+        //Loan updatedLoan = modelMapper.map(loan, Loan.class);
+        Customer customer = customerRepository.findByRecordId(loanApplication.getCustomerId());
+
+        Integer loanScore = customer.getLoanScore();
+        Double income = customer.getMonthlyIncome();
+        Integer loanMultiplier = loan.getCreditMultiplier();
+
+        LoanLimit loanLimit1 = loanLimitRepository.findByName("HIGHER");
+        LoanLimit loanLimit2 = loanLimitRepository.findByName("SPECIAL");
+        boolean loanLimitCheck = (income >= loanLimit1.getLoanLimitAmount());
+        LoanScoreResult loanScoreResult = loanScoreResultRepository.findByName("APPROVED");
+        boolean loanScoreCheck = (loanScore >= loanScoreResult.getLoanScoreLimit());
+        LoanLimit loanLimit3 = loanLimitRepository.findByName("LOWER");
+
+        if (loanScoreCheck) {
+            loanLimit2.setLoanLimitAmount(income * loanMultiplier);
+            loan.setLoanLimit(loanLimit2.getLoanLimitAmount());
+        } else if (loanLimitCheck) {
+            loan.setLoanLimit(loanLimit1.getLoanLimitAmount());
+        } else {
+            loan.setLoanLimit(loanLimit3.getLoanLimitAmount());
+        }
+        return loan;
     }
 
+    private Loan getNotResultedLoanApplicationOfCustomer(String customerId) {
 
-    public void addNotificationToLoanApplication(Long loanApplicationId, Long notificationId) {
+        Customer customer = customerRepository.findByRecordId(customerId);
+        List<Loan> loanList = new ArrayList<>();
+        for (String loanApplicationId : customer.getLoanApplicationId()) {
+            LoanApplication loanApplication = loanApplicationRepository.findByRecordId(loanApplicationId);
+            String loanId = loanApplication.getLoanId();
+            Loan loan = loanRepository.findByRecordId(loanId);
+            LoanScoreResult loanScoreResult = loanScoreResultRepository.findByRecordId(loan.getLoanScoreResultId());
+            if (loanScoreResult.getName().equalsIgnoreCase("NOT_RESULTED")) {
+                loanList.add(loan);
+            }
+        }
+        return loanList.stream().findFirst().orElse(null);
+
+        /*var optionalLoan =
+                customer.getLoanApplicationId().stream()
+                        .filter(c -> c.getLoan().getLoanScoreResult().equals(LoanScoreResult.NOT_RESULTED))
+                        .findFirst();
+
+        return optionalLoan.isPresent() ? optionalLoan.get().getLoan() : null;*/
+
     }
+        /*protected Optional<LoanApplication> findLoanApplicationById (Long id){
+            return Optional.ofNullable(loanApplicationRepository.findById(id).orElseThrow(() ->
+                    new LoanNotFoundException("Related loan with id: " + id + " not found")));
+        }
+
+        public LoanApplication getLoanApplicationById (Long loanApplicationId){
+            return findLoanApplicationById(loanApplicationId).get();
+        }*/
+
+
+    /*public void createLoanApplication(LoanApplicationDto request) {
+
+        Customer customer = customerRepository.findByRecordId(request.getCustomerId());
+        Loan loan = loanRepository.findByRecordId(request.getLoanId());
+
+        Optional<Customer> customerOptional = Optional.ofNullable(customerRepository.findByRecordId(customer.getRecordId()));
+        customerOptional.ifPresent(customer1 -> {
+            LoanApplication loanApplication = new LoanApplication();
+            loanApplication.setCustomerId(request.getCustomerId());
+            loanApplication.setLoanId(request.getLoanId());
+            loanApplicationRepository.save(loanApplication);
+
+        });
+    }*/
+
+     /*private Loan createLoan() {
+        var newLoan = new Loan(LoanType.PERSONAL, 0.0, LoanScoreResult.NOT_RESULTED, LoanStatus.ACTIVE, new Date());
+        loanRepository.save(newLoan);
+        return newLoan;
+    }*/
+
+    /*public void updateByRecordId(String recordId) {
+        LoanApplication  loanApplicationOptional=loanApplicationRepository.findByRecordId(recordId);
+        if(loanApplicationOptional!=null)
+        {
+            loanApplicationRepository.save(loanApplicationOptional);
+        }
+    }*/
+
 }

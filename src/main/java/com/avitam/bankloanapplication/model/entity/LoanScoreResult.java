@@ -9,5 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("loanScoreResult")
 public class LoanScoreResult extends BaseEntity{
     private String description;
+    private Integer loanScoreLimit;
 
 }

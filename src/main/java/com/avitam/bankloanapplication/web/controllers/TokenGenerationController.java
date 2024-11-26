@@ -27,12 +27,10 @@ public class TokenGenerationController extends BaseController {
 
     @Autowired
     private JWTUtility jwtUtility;
-
     @Autowired
     private AuthenticationProvider authenticationProvider;
-
     @Autowired
-    CustomerRepository userRepository;
+    CustomerRepository customerRepository;
 
     @PostMapping("/api/authenticate")
     @ResponseBody
