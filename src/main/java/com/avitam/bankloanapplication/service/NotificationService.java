@@ -8,11 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.util.ArrayList;
-
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class NotificationService {
@@ -43,6 +41,8 @@ public class NotificationService {
                 notificationRepository.save(notification);
             } else {
                 notification = modelMapper.map(notificationDto, Notification.class);
+                notification.setCreationTime(new Date());
+                notification.setStatus(true);
                 notificationRepository.save(notification);
             }
             if (request.getRecordId() == null) {

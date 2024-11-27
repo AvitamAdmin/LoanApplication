@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,6 +34,8 @@ public class LoanStatusService {
                 loanStatusRepository.save(loanStatus);
             } else {
                 loanStatus = modelMapper.map(loanStatusDto, LoanStatus.class);
+                loanStatus.setStatus(true);
+                loanStatus.setCreationTime(new Date());
                 loanStatusRepository.save(loanStatus);
             }
             if (request.getRecordId() == null) {

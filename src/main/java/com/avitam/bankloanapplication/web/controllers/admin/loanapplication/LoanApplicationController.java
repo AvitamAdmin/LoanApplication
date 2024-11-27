@@ -87,7 +87,7 @@ public class LoanApplicationController extends BaseController {
 
     @GetMapping("/getLoan")
     @ResponseBody
-    public LoanDto getLoanApplicationResult(@RequestBody LoanApplicationDto request) {
+    public LoanWsDto getLoanApplicationResult(@RequestBody LoanApplicationWsDto request) {
 
         return loanApplicationService.getLoanApplicationResult(request);
     }

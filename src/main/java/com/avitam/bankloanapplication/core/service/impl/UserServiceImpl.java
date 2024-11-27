@@ -12,6 +12,7 @@ import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.repository.UserRepository;
 import com.avitam.bankloanapplication.repository.VerificationTokenRepository;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,16 +55,13 @@ public class UserServiceImpl implements UserService {
         }
         else {
             customer = modelMapper.map(request,Customer.class);
-            //customer =request.getCustomer();
             customer.setCreationTime(new Date());
             customerRepository.save( customer);
             }
-        //customer.setLastModified(new Date());
-        /*if(StringUtils.isNotEmpty(customer.getPassword()))
+        if(StringUtils.isNotEmpty(customer.getPassword()))
         {
             customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
-            customer.setPasswordConfirm(bCryptPasswordEncoder.encode(customer.getPasswordConfirm()));
-        }*/
+        }
             customerRepository.save(customer);
             if (request.getRecordId() == null) {
                 customer.setRecordId(String.valueOf(customer.getId().getTimestamp()));

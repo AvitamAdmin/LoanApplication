@@ -23,26 +23,27 @@ public class LoanScoreResultService {
     private ModelMapper modelMapper;
 
     public LoanScoreResultWsDto createLoanScore(LoanScoreResultWsDto request) {
-        LoanScoreResult requestData = null;
+        LoanScoreResult loanScoreResult = null;
         List<LoanScoreResultDto> loanScoreDtos=request.getLoanScoreDtos();
         List<LoanScoreResult> loanScoreResults=new ArrayList<>();
         for(LoanScoreResultDto loanScoreDto:loanScoreDtos){
         if(loanScoreDto.getRecordId()!=null){
-            requestData= loanScoreResultRepository.findByRecordId(loanScoreDto.getRecordId());
-            modelMapper.map(loanScoreDto, requestData);
-            requestData.setLastModified(new Date());
-            loanScoreResultRepository.save(requestData);
+            loanScoreResult= loanScoreResultRepository.findByRecordId(loanScoreDto.getRecordId());
+            modelMapper.map(loanScoreDto, loanScoreResult);
+            loanScoreResult.setLastModified(new Date());
+            loanScoreResultRepository.save(loanScoreResult);
         }
         else {
-            requestData = modelMapper.map(loanScoreDto, LoanScoreResult.class);
-            requestData.setCreationTime(new Date());
-            loanScoreResultRepository.save(requestData);
+            loanScoreResult = modelMapper.map(loanScoreDto, LoanScoreResult.class);
+            loanScoreResult.setCreationTime(new Date());
+            loanScoreResult.setStatus(true);
+            loanScoreResultRepository.save(loanScoreResult);
         }
         if(request.getRecordId()==null){
-            requestData.setRecordId(String.valueOf(requestData.getId().getTimestamp()));
+            loanScoreResult.setRecordId(String.valueOf(loanScoreResult.getId().getTimestamp()));
         }
-        loanScoreResultRepository.save(requestData);
-        loanScoreResults.add(requestData);
+        loanScoreResultRepository.save(loanScoreResult);
+        loanScoreResults.add(loanScoreResult);
         request.setBaseUrl(ADMIN_LOANSCORE);
         }
         request.setLoanScoreDtos(modelMapper.map(loanScoreResults,List.class));

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -42,6 +43,8 @@ public class LoanService {
                 loanRepository.save(loan);
             } else {
                 loan = modelMapper.map(loanDto, Loan.class);
+                loan.setStatus(true);
+                loan.setCreationTime(new Date());
                 loanRepository.save(loan);
             }
             if (request.getRecordId() == null) {
