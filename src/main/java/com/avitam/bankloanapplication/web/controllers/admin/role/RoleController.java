@@ -2,10 +2,13 @@ package com.avitam.bankloanapplication.web.controllers.admin.role;
 
 
 import com.avitam.bankloanapplication.model.dto.RoleDto;
+import com.avitam.bankloanapplication.model.dto.RoleWsDto;
 import com.avitam.bankloanapplication.model.entity.Role;
 import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.service.RoleService;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
+import org.apache.commons.collections4.CollectionUtils;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -14,10 +17,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
+import java.util.ArrayList;
+
+import java.util.List;
 
 @Controller
-@RequestMapping("/admin/Role")
+@RequestMapping("/admin/role")
 public class RoleController extends BaseController {
     @Autowired
     private RoleRepository roleRepository;
@@ -30,46 +35,48 @@ public class RoleController extends BaseController {
 
     @PostMapping
     @ResponseBody
-    public RoleDto getAllRoles(@RequestBody RoleDto roleDto){
-        Pageable pageable=getPageable(roleDto.getPage(),roleDto.getSizePerPage(),roleDto.getSortDirection(),roleDto.getSortField());
-        Role role = modelMapper.map(roleDto, Role.class);
+    public RoleWsDto getAllRoles(@RequestBody RoleWsDto roleWsDto){
+        Pageable pageable=getPageable(roleWsDto.getPage(),roleWsDto.getSizePerPage(),roleWsDto.getSortDirection(),roleWsDto.getSortField());
+        RoleDto roleDto = CollectionUtils.isNotEmpty(roleWsDto.getRoleDtoList()) ? roleWsDto.getRoleDtoList().get(0): new RoleDto();
+        Role role = modelMapper.map(roleWsDto, Role.class);
         Page<Role> page=isSearchActive(role) !=null ? roleRepository.findAll(Example.of(role),pageable) : roleRepository.findAll(pageable);
-        roleDto.setRoles(Collections.singletonList(String.valueOf(page.getContent())));
-        roleDto.setBaseUrl(ADMIN_ROLE);
-        roleDto.setTotalPages(page.getTotalPages());
-        roleDto.setTotalRecords(page.getTotalElements());
-        return roleDto;
+        roleWsDto.setRoleDtoList(modelMapper.map(page.getContent(), List.class));
+        roleWsDto.setBaseUrl(ADMIN_ROLE);
+        roleWsDto.setTotalPages(page.getTotalPages());
+        roleWsDto.setTotalRecords(page.getTotalElements());
+        return roleWsDto;
 
     }
+    @GetMapping("/get")
+    @ResponseBody
+    public RoleWsDto getActiveRole(@RequestBody RoleWsDto request){
+        RoleWsDto roleWsDto = new RoleWsDto();
+        List<Role> role = new ArrayList<>();
+        for(RoleDto roleDto: request.getRoleDtoList()){
+            role.add(roleRepository.findByRecordId(roleDto.getRecordId()));
+        }
+        roleWsDto.setRoleDtoList(modelMapper.map(role,List.class));
+        roleWsDto.setBaseUrl(ADMIN_ROLE);
+        return roleWsDto;
+    }
+
     @PostMapping("/edit")
     @ResponseBody
-    public RoleDto createRole(@RequestBody RoleDto request) {
+    public RoleWsDto createRole(@RequestBody RoleWsDto request) {
         return roleService.createRole(request);
 
     }
-    @PostMapping("/update")
-    @ResponseBody
-    public RoleDto updateRole(@RequestBody RoleDto request) {
 
-        return roleService.createRole(request);
-    }
     @PostMapping("/delete")
     @ResponseBody
-    public RoleDto deleteLoan(@RequestBody RoleDto request){
-        for (String id :request.getRecordId().split(",")){
-            roleRepository.deleteByRecordId(id);
+    public RoleWsDto deleteLoan(@RequestBody RoleWsDto request){
+        for(RoleDto roleDto:request.getRoleDtoList()){
+            roleRepository.deleteByRecordId(roleDto.getRecordId());
         }
         request.setMessage("Data deleted Successfully");
         request.setBaseUrl(ADMIN_ROLE);
         return request;
     }
-    @GetMapping("/get")
-    @ResponseBody
-    public RoleDto getActiveRole(@RequestBody RoleDto request){
-        Role role = roleRepository.findByRecordId(request.getRecordId());
-        request=modelMapper.map(role, RoleDto.class);
-        request.setBaseUrl(ADMIN_ROLE);
-        return request;
-    }
+
 
 }
