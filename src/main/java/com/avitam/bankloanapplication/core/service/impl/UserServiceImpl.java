@@ -1,10 +1,10 @@
 package com.avitam.bankloanapplication.core.service.impl;
 
-import com.avitam.bankloanapplication.model.Role;
 import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.avitam.bankloanapplication.core.service.CoreService;
 import com.avitam.bankloanapplication.core.service.UserService;
 import com.avitam.bankloanapplication.model.entity.Customer;
+import com.avitam.bankloanapplication.model.entity.Role;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.model.entity.VerificationToken;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isAdminRole() {
-        List<com.avitam.bankloanapplication.model.Role> roles = coreService.getCurrentUser().getRoles();
+        List<Role> roles = coreService.getCurrentUser().getRoles();
         if (CollectionUtils.isNotEmpty(roles)) {
             for (Role role : roles) {
                 if ("ROLE_ADMIN".equals(role.getAuthority())) {
