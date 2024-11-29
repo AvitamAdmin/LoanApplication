@@ -9,16 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository("NodeRepository")
-public interface NodeRepository extends MongoRepository<Node, ObjectId> {
+public interface NodeRepository extends MongoRepository<Node, String> {
+    List<Node> findByParentNode(Node parentNode);
 
+    List<Node> findByStatusOrderByDisplayPriority(Boolean status);
 
-    List<Node> findByParentNodeId(String id);
-
-    Optional<Node> findById(String id);
-
-    Node findByRecordId(String recordId);
+    Node findByRecordId(String nodeId);
 
     void deleteByRecordId(String recordId);
-
-    List<Node> findByStatusOrderByIdentifier(boolean b);
 }

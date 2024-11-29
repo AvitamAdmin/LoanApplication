@@ -13,7 +13,10 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,54 +32,69 @@ public class InterfaceController extends BaseController {
     private static final String ADMIN_INTERFACE="/admin/interface";
 
     @PostMapping
-    public NodeWsDto getAllNodes(@RequestBody NodeWsDto nodeWsDto){
-        Pageable pageable=getPageable(nodeWsDto.getPage(),nodeWsDto.getSizePerPage(),nodeWsDto.getSortDirection(),nodeWsDto.getSortField());
+    @ResponseBody
+    public NodeWsDto getAllModels(@RequestBody NodeWsDto nodeWsDto) {
+        Pageable pageable = getPageable(nodeWsDto.getPage(), nodeWsDto.getSizePerPage(), nodeWsDto.getSortDirection(), nodeWsDto.getSortField());
         NodeDto nodeDto = CollectionUtils.isNotEmpty(nodeWsDto.getNodeDtos()) ? nodeWsDto.getNodeDtos().get(0) : new NodeDto();
         Node node = modelMapper.map(nodeDto, Node.class);
-        Page<Node> page=isSearchActive(node) !=null ? nodeRepository.findAll(Example.of(node),pageable) : nodeRepository.findAll(pageable);
+        Page<Node> page = isSearchActive(node) != null ? nodeRepository.findAll(Example.of(node), pageable) : nodeRepository.findAll(pageable);
         nodeWsDto.setNodeDtos(modelMapper.map(page.getContent(), List.class));
+        nodeWsDto.setBaseUrl(ADMIN_INTERFACE);
         nodeWsDto.setTotalPages(page.getTotalPages());
         nodeWsDto.setTotalRecords(page.getTotalElements());
-        nodeWsDto.setBaseUrl(ADMIN_INTERFACE);
         return nodeWsDto;
     }
+
     @GetMapping("/get")
-    public NodeWsDto getActiveInterface() {
-        NodeWsDto nodeWsDto=new NodeWsDto();
-        List<Node> nodes=nodeRepository.findByStatusOrderByIdentifier(true);
-        nodeWsDto.setNodeDtos(modelMapper.map(nodes,List.class));
+    @ResponseBody
+    public NodeWsDto getActiveNodes() {
+        NodeWsDto nodeWsDto = new NodeWsDto();
         nodeWsDto.setBaseUrl(ADMIN_INTERFACE);
+        nodeWsDto.setNodeDtos(modelMapper.map(nodeRepository.findByStatusOrderByDisplayPriority(true), List.class));
         return nodeWsDto;
     }
-
-
 
     @PostMapping("/getedit")
-    public NodeWsDto editLoanApplication(@RequestBody NodeWsDto request) {
+    @ResponseBody
+    public NodeWsDto editInterface(@RequestBody NodeWsDto request) {
         NodeWsDto nodeWsDto = new NodeWsDto();
-        List<Node> nodeList=new ArrayList<>();
-        for(NodeDto nodeDto:request.getNodeDtos()) {
-            nodeList.add(nodeRepository.findByRecordId(nodeDto.getRecordId()));
-        }
-        nodeWsDto.setNodeDtos(modelMapper.map(nodeList,List.class));
         nodeWsDto.setBaseUrl(ADMIN_INTERFACE);
+        Node node = nodeRepository.findByRecordId(request.getNodeDtos().get(0).getRecordId());
+        if (node != null) {
+            nodeWsDto.setNodeDtos(List.of(modelMapper.map(node, NodeDto.class)));
+        }
         return nodeWsDto;
     }
 
     @PostMapping("/edit")
+    @ResponseBody
     public NodeWsDto handleEdit(@RequestBody NodeWsDto request) {
-
         return nodeService.handleEdit(request);
     }
 
-
-    @PostMapping("/delete")
-    public NodeWsDto delete(@RequestBody NodeWsDto nodeWsDto) {
-        for (NodeDto nodeDto: nodeWsDto.getNodeDtos()) {
-            nodeRepository.deleteByRecordId(nodeDto.getRecordId());
-        }
-        nodeWsDto.setMessage("Data deleted successfully");
+    @GetMapping("/add")
+    @ResponseBody
+    public NodeWsDto addInterface() {
+        NodeWsDto nodeWsDto = new NodeWsDto();
+        nodeWsDto.setNodeDtos(modelMapper.map(nodeRepository.findByStatusOrderByDisplayPriority(true), List.class));
         nodeWsDto.setBaseUrl(ADMIN_INTERFACE);
         return nodeWsDto;
     }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public NodeWsDto deleteInterface(@RequestBody NodeWsDto nodeWsDto) {
+        for (NodeDto nodeDto : nodeWsDto.getNodeDtos()) {
+            nodeRepository.deleteByRecordId(nodeDto.getRecordId());
+        }
+        nodeWsDto.setBaseUrl(ADMIN_INTERFACE);
+        nodeWsDto.setMessage("Data deleted successfully!!");
+        return nodeWsDto;
+    }
+
+
+
+
+
+
 }
