@@ -8,10 +8,8 @@ import java.util.List;
 
 public interface NodeService {
     List<NodeDto> getAllNodes();
-
     List<NodeDto> getNodesForRoles();
-
     NodeWsDto handleEdit(NodeWsDto request);
+    Node findById(String id);
 
-//    Node findById(String id);
 }

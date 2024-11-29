@@ -17,4 +17,6 @@ public interface NodeRepository extends MongoRepository<Node, String> {
     Node findByRecordId(String nodeId);
 
     void deleteByRecordId(String recordId);
+
+    List<Node> findByParentNodeId(String node);
 }

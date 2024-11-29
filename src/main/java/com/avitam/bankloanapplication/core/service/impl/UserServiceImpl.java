@@ -15,6 +15,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -134,16 +136,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isAdminRole() {
-        Set<Role> roles = coreService.getCurrentUser().getRoles();
+        String email="muthu@gmail.com";
+       Customer customer= customerRepository.findByEmail(email);
+        Set<Role> roles = customer.getRoles();
         if (CollectionUtils.isNotEmpty(roles)) {
             for (Role role : roles) {
-                if ("ROLE_ADMIN".equals(role.getAuthority())) {
+                if ("ROLE_ADMIN".equals(role.getName())) {
                     return true;
                 }
             }
         }
         return false;
     }
+
+    @Override
+    public Customer getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        org.springframework.security.core.userdetails.User principalObject = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        return customerRepository.findByEmail(principalObject.getUsername());
+    }
+
 
     public boolean updateResetPasswordToken(String token, String email) {
         User user = userRepository.findByEmail(email);

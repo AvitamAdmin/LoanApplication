@@ -1,6 +1,7 @@
 package com.avitam.bankloanapplication.core.service;
 
 import com.avitam.bankloanapplication.model.dto.CustomerDto;
+import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.model.entity.VerificationToken;
 
@@ -27,6 +28,7 @@ public interface UserService {
 
     boolean isAdminRole();
 
+    Customer getCurrentUser();
 
     boolean updateResetPasswordToken(String token, String email);
 

@@ -34,12 +34,12 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<NodeDto> getAllNodes() {
         List<NodeDto> allNodes = new ArrayList<>();
-        List<Node> nodeList = nodeRepository.findByStatusOrderByDisplayPriority(true).stream().filter(node -> node.getParentNode() == null).collect(Collectors.toList());
+        List<Node> nodeList = nodeRepository.findByParentNodeId(null);
         if (CollectionUtils.isNotEmpty(nodeList)) {
             for (Node node : nodeList) {
                 NodeDto nodeDto = new NodeDto();
                 modelMapper.map(node, nodeDto);
-                List<Node> childNodes = nodeRepository.findByParentNode(node);
+                List<Node> childNodes = nodeRepository.findByParentNodeId(node.getParentNodeId());
                 if (CollectionUtils.isNotEmpty(childNodes)) {
                     List<Node> childNodeList = childNodes.stream().filter(childNode -> BooleanUtils.isTrue(childNode.getStatus()))
                             .sorted(Comparator.comparing(nodes -> nodes.getDisplayPriority())).collect(Collectors.toList());
@@ -98,8 +98,7 @@ public class NodeServiceImpl implements NodeService{
             } else {
                 node = modelMapper.map(nodeDto, Node.class);
                 node.setCreationTime(new Date());
-                node.setCreator(coreService.getCurrentUser().getUsername());
-                Node parentNode = node.getParentNode();
+                Node parentNode = node;
                 if (parentNode != null) {
                     if (parentNode.getRecordId() != null) {
                         node.setParentNode(nodeRepository.findByRecordId(parentNode.getRecordId()));
@@ -116,6 +115,11 @@ public class NodeServiceImpl implements NodeService{
         nodeWsDto.setMessage("Nodes are updated successfully!!");
         nodeWsDto.setBaseUrl(ADMIN_INTERFACE);
         return nodeWsDto;
+    }
+
+    @Override
+    public Node findById(String id) {
+        return null;
     }
 
 //    @Override

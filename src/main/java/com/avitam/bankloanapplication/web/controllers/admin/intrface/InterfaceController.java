@@ -1,5 +1,6 @@
 package com.avitam.bankloanapplication.web.controllers.admin.intrface;
 
+import com.avitam.bankloanapplication.core.service.UserService;
 import com.avitam.bankloanapplication.model.dto.NodeDto;
 import com.avitam.bankloanapplication.model.dto.NodeWsDto;
 import com.avitam.bankloanapplication.model.entity.Node;
@@ -12,15 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/admin/interface")
 public class InterfaceController extends BaseController {
     @Autowired
@@ -29,6 +27,8 @@ public class InterfaceController extends BaseController {
     private ModelMapper modelMapper;
     @Autowired
     private NodeService nodeService;
+    @Autowired
+    private UserService userService;
     private static final String ADMIN_INTERFACE="/admin/interface";
 
     @PostMapping
@@ -66,6 +66,11 @@ public class InterfaceController extends BaseController {
         return nodeWsDto;
     }
 
+    @GetMapping("/getMenu")
+    @ResponseBody
+    public List<NodeDto> getMenu() {
+        return userService.isAdminRole() ? nodeService.getAllNodes() : nodeService.getNodesForRoles();
+    }
     @PostMapping("/edit")
     @ResponseBody
     public NodeWsDto handleEdit(@RequestBody NodeWsDto request) {

@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,6 +30,8 @@ public class Customer extends BaseEntity{
     private String email;
 
     private String password;
+
+    private Set<Role> roles;
 
     private Integer loanScore = 500;
 

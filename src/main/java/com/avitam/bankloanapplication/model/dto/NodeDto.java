@@ -18,7 +18,7 @@ public class NodeDto extends CommonDto{
 
     private String path;
     private Set<Role> roles;
-    private String parentNode;
+    private Node parentNode;
     private String parentNodeId;
     private List<Node> childNodes;
     private Integer displayPriority;
