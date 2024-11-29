@@ -13,6 +13,7 @@ import org.springframework.security.web.FilterInvocation;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class AccessDecisionProcessor implements AccessDecisionVoter<FilterInvocation> {
 
@@ -30,13 +31,13 @@ public class AccessDecisionProcessor implements AccessDecisionVoter<FilterInvoca
         if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User principalObject = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
             User currentUser = userRepository.findByEmail(principalObject.getUsername());
-            List<Role> roles = currentUser.getRoles();
+            Set<Role> roles = currentUser.getRoles();
             /*List<Node> nodes = (List<Node>) getNodesForRoles(roles);
             if (!nodes.isEmpty()) {
                 if (nodes.stream().filter(node -> node.getPath().contains(requestUrl)).findAny().isPresent()) {
                     return ACCESS_GRANTED;
                 } else {
-                    return ACCESS_DENIED;=
+                    return ACCESS_DENIED;
                 }
             }*/
         }

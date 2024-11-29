@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -133,7 +134,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isAdminRole() {
-        List<Role> roles = coreService.getCurrentUser().getRoles();
+        Set<Role> roles = coreService.getCurrentUser().getRoles();
         if (CollectionUtils.isNotEmpty(roles)) {
             for (Role role : roles) {
                 if ("ROLE_ADMIN".equals(role.getAuthority())) {
