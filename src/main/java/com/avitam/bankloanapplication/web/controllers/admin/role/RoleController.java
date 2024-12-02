@@ -1,6 +1,5 @@
 package com.avitam.bankloanapplication.web.controllers.admin.role;
 
-
 import com.avitam.bankloanapplication.model.dto.RoleDto;
 import com.avitam.bankloanapplication.model.dto.RoleWsDto;
 import com.avitam.bankloanapplication.model.entity.Role;

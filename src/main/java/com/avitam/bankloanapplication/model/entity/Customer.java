@@ -39,4 +39,6 @@ public class Customer extends BaseEntity{
 
     private List<String> customerList;
 
+    public Customer(String number, String gulbala, String salamov, double v, String male, int i, String number1, String mail, int i1, Object o) {
+    }
 }

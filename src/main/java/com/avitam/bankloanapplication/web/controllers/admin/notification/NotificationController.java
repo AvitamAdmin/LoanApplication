@@ -7,7 +7,7 @@ import com.avitam.bankloanapplication.model.dto.NotificationDto;
 import com.avitam.bankloanapplication.model.dto.NotificationWsDto;
 import com.avitam.bankloanapplication.model.entity.Notification;
 import com.avitam.bankloanapplication.repository.NotificationRepository;
-import com.avitam.bankloanapplication.service.NotificationService;
+import com.avitam.bankloanapplication.service.impl.NotificationServiceImpl;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
 import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
@@ -28,7 +28,7 @@ import java.util.List;
 public class NotificationController extends BaseController {
     private static final String ADMIN_NOTIFICATION ="/admin/notification" ;
     @Autowired
-    private NotificationService notificationService;
+    private NotificationServiceImpl notificationService;
     @Autowired
     private NotificationRepository notificationRepository;
     @Autowired

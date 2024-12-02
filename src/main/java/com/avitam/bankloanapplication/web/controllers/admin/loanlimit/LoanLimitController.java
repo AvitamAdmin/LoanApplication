@@ -2,12 +2,8 @@ package com.avitam.bankloanapplication.web.controllers.admin.loanlimit;
 
 import com.avitam.bankloanapplication.model.dto.*;
 import com.avitam.bankloanapplication.model.entity.LoanLimit;
-import com.avitam.bankloanapplication.model.entity.LoanScoreResult;
-import com.avitam.bankloanapplication.model.entity.LoanStatus;
 import com.avitam.bankloanapplication.repository.LoanLimitRepository;
-import com.avitam.bankloanapplication.repository.LoanScoreResultRepository;
 import com.avitam.bankloanapplication.service.LoanLimitService;
-import com.avitam.bankloanapplication.service.LoanScoreResultService;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
 import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
@@ -15,11 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController

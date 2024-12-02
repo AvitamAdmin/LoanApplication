@@ -1,4 +1,4 @@
-package com.avitam.bankloanapplication.service;
+package com.avitam.bankloanapplication.service.impl;
 
 import com.avitam.bankloanapplication.core.service.CoreService;
 import com.avitam.bankloanapplication.model.dto.NodeDto;
@@ -6,6 +6,7 @@ import com.avitam.bankloanapplication.model.dto.NodeWsDto;
 import com.avitam.bankloanapplication.model.entity.*;
 import com.avitam.bankloanapplication.repository.NodeRepository;
 import com.avitam.bankloanapplication.repository.UserRepository;
+import com.avitam.bankloanapplication.service.NodeService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.modelmapper.ModelMapper;
@@ -19,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class NodeServiceImpl implements NodeService{
+public class NodeServiceImpl implements NodeService {
 
     private static final String ADMIN_INTERFACE = "/admin/interface";
     @Autowired

@@ -4,7 +4,7 @@ import com.avitam.bankloanapplication.core.service.CoreService;
 import com.avitam.bankloanapplication.model.dto.*;
 import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
-import com.avitam.bankloanapplication.service.CustomerService;
+import com.avitam.bankloanapplication.service.impl.CustomerServiceImpl;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
 import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
@@ -27,7 +27,7 @@ public class CustomerController extends BaseController {
     @Autowired
     private CoreService coreService;
     @Autowired
-    private CustomerService customerService;
+    private CustomerServiceImpl customerService;
 
     public static final String ADMIN_CUSTOMER = "/admin/customer";
 

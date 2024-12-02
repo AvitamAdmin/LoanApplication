@@ -1,0 +1,57 @@
+package com.avitam.bankloanapplication.service.impl;
+
+import com.avitam.bankloanapplication.model.dto.RoleDto;
+import com.avitam.bankloanapplication.model.dto.RoleWsDto;
+import com.avitam.bankloanapplication.model.entity.Role;
+import com.avitam.bankloanapplication.repository.RoleRepository;
+import com.avitam.bankloanapplication.service.RoleService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static com.avitam.bankloanapplication.web.controllers.admin.role.RoleController.ADMIN_ROLE;
+
+@Service
+public class RoleServiceImpl implements RoleService {
+
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+    public RoleWsDto createRole(RoleWsDto request) {
+        RoleWsDto roleWsDto = new RoleWsDto();
+        Role role = new Role();
+        List<RoleDto> roleDtos = request.getRoleDtoList();
+        List<Role> roles = new ArrayList<>();
+        for(RoleDto roleDto :roleDtos) {
+            if (roleDto.getRecordId() != null) {
+                role = roleRepository.findByRecordId(roleDto.getRecordId());
+                modelMapper.map(roleDto, role);
+                roleRepository.save(role);
+            } else {
+                role = modelMapper.map(roleDto, Role.class);
+                role.setCreationTime(new Date());
+                role.setStatus(true);
+                roleRepository.save(role);
+            }
+            if (request.getRecordId() == null) {
+                role.setRecordId(String.valueOf(role.getId().getTimestamp()));
+            }
+            roleRepository.save(role);
+            roles.add(role);
+            request.setBaseUrl(ADMIN_ROLE);
+
+        }
+        request.setRoleDtoList(modelMapper.map(roles, List.class));
+        return request;
+        }
+
+    }
+
+
+

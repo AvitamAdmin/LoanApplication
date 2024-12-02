@@ -6,7 +6,7 @@ import com.avitam.bankloanapplication.model.entity.LoanApplication;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.repository.LoanApplicationRepository;
 import com.avitam.bankloanapplication.repository.LoanRepository;
-import com.avitam.bankloanapplication.service.LoanApplicationService;
+import com.avitam.bankloanapplication.service.impl.LoanApplicationServiceImpl;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
 import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
@@ -36,7 +36,7 @@ public class LoanApplicationController extends BaseController {
     private LoanApplicationRepository loanApplicationRepository;
 
     @Autowired
-    private LoanApplicationService loanApplicationService;
+    private LoanApplicationServiceImpl loanApplicationServiceImpl;
 
     public static final String ADMIN_LOANAPPLICATION = "/admin/loanApplication";
 
@@ -82,14 +82,14 @@ public class LoanApplicationController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public LoanApplicationWsDto handleEdit(@RequestBody LoanApplicationWsDto request) {
-        return loanApplicationService.handleEdit(request);
+        return loanApplicationServiceImpl.handleEdit(request);
     }
 
     @GetMapping("/getLoan")
     @ResponseBody
     public LoanWsDto getLoanApplicationResult(@RequestBody LoanApplicationWsDto request) {
 
-        return loanApplicationService.getLoanApplicationResult(request);
+        return loanApplicationServiceImpl.getLoanApplicationResult(request);
     }
 
     @GetMapping("/add")

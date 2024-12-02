@@ -14,4 +14,6 @@ public class LoanApplication extends BaseEntity{
     private String notificationId;
     private String loanId;
 
+    public LoanApplication(Customer dummyCustomer, Loan dummyLoan) {
+    }
 }
