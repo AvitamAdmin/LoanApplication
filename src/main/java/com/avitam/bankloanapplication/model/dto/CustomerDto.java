@@ -1,7 +1,9 @@
 package com.avitam.bankloanapplication.model.dto;
 
+import com.avitam.bankloanapplication.model.entity.Role;
 import lombok.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,6 +30,8 @@ public class CustomerDto extends CommonDto{
     private String password;
 
     private Integer loanScore = 500;
+
+    private Set<Role> roles;
 
     private List<String> loanApplicationId;
 
