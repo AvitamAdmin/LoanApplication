@@ -34,12 +34,12 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<NodeDto> getAllNodes() {
         List<NodeDto> allNodes = new ArrayList<>();
-        List<Node> nodeList = nodeRepository.findByParentNodeId(null);
+        List<Node> nodeList = nodeRepository.findByStatusOrderByDisplayPriority(true).stream().filter(node -> node.getParentNode() == null).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(nodeList)) {
             for (Node node : nodeList) {
                 NodeDto nodeDto = new NodeDto();
                 modelMapper.map(node, nodeDto);
-                List<Node> childNodes = nodeRepository.findByParentNodeId(node.getParentNodeId());
+                List<Node> childNodes = nodeRepository.findByParentNodeId(node.getRecordId());
                 if (CollectionUtils.isNotEmpty(childNodes)) {
                     List<Node> childNodeList = childNodes.stream().filter(childNode -> BooleanUtils.isTrue(childNode.getStatus()))
                             .sorted(Comparator.comparing(nodes -> nodes.getDisplayPriority())).collect(Collectors.toList());

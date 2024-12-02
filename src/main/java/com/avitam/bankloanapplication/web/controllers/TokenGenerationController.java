@@ -33,7 +33,6 @@ public class TokenGenerationController extends BaseController {
     CustomerRepository customerRepository;
 
     @PostMapping("/api/authenticate")
-    @ResponseBody
     public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest){
 
         authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));

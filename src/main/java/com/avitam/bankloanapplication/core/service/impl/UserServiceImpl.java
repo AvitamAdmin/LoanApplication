@@ -136,9 +136,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isAdminRole() {
-        String email="muthu@gmail.com";
-       Customer customer= customerRepository.findByEmail(email);
-        Set<Role> roles = customer.getRoles();
+
+        Set<Role> roles = getCurrentUser().getRoles();
         if (CollectionUtils.isNotEmpty(roles)) {
             for (Role role : roles) {
                 if ("ROLE_ADMIN".equals(role.getName())) {
