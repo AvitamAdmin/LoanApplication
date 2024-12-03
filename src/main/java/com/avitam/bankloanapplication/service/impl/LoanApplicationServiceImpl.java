@@ -78,7 +78,11 @@ public class LoanApplicationServiceImpl {
             loanApplicationList.add(loanApplication.getRecordId());
             customer.setLoanApplicationId(loanApplicationList);
             customerRepository.save(customer);
+            request.setBaseUrl(ADMIN_LOANAPPLICATION);
+            request.setMessage("Data added Successfully");
+            loanApplications.add(loanApplication);
         }
+        request.setLoanApplicationDtos(modelMapper.map(loanApplications,List.class));
         return request;
     }
 

@@ -14,4 +14,5 @@ public class CommonWsDto extends PaginationDto{
     private String baseUrl;
     private String recordId;
     private String message;
+    private Boolean success = true;
 }

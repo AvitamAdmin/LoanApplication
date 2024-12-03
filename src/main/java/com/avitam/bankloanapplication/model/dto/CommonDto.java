@@ -25,7 +25,6 @@ public class CommonDto extends PaginationDto{
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Date lastModified;
     private String modifiedBy;
-    private boolean success = true;
     private String baseUrl;
     private String message;
 
