@@ -18,7 +18,7 @@ public class CommonDto extends PaginationDto{
     private String name;
     private String recordId;
     private String identifier;
-    private Boolean status;
+    private Boolean status = true;
     private String creator;
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Date creationTime;

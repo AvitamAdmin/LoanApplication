@@ -91,6 +91,7 @@ public class NodeServiceImpl implements NodeService {
     @Override
     public NodeWsDto handleEdit(@RequestBody NodeWsDto request) {
         NodeWsDto nodeWsDto = new NodeWsDto();
+        List<Node> nodes=new ArrayList<>();
         for (NodeDto nodeDto : request.getNodeDtos()) {
             Node node = null;
             if (nodeDto.getRecordId() != null) {
@@ -112,9 +113,12 @@ public class NodeServiceImpl implements NodeService {
                 node.setRecordId(String.valueOf(node.getId().getTimestamp()));
             }
             nodeRepository.save(node);
+            nodes.add(node);
+            nodeWsDto.setMessage("Nodes are updated successfully!!");
+            nodeWsDto.setBaseUrl(ADMIN_INTERFACE);
+
         }
-        nodeWsDto.setMessage("Nodes are updated successfully!!");
-        nodeWsDto.setBaseUrl(ADMIN_INTERFACE);
+        nodeWsDto.setNodeDtos(modelMapper.map(nodes,List.class));
         return nodeWsDto;
     }
 
