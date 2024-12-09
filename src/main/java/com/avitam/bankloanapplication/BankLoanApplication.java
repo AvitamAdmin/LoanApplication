@@ -59,13 +59,4 @@ public class BankLoanApplication {
         return mapper;
     }
 
-    @Bean
-    JavaMailSenderImpl mailSender() {
-        return new JavaMailSenderImpl();
-    }
-
-    @Bean
-    public Locale locale() {
-        return Locale.ENGLISH;
-    }
 }

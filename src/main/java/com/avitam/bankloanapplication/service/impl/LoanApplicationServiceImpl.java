@@ -13,6 +13,7 @@ import com.avitam.bankloanapplication.model.entity.LoanStatus;
 import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.model.entity.Loan;
 import com.avitam.bankloanapplication.model.entity.LoanApplication;
+import com.avitam.bankloanapplication.service.LoanApplicationService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class LoanApplicationServiceImpl {
+public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     @Autowired
     private ModelMapper modelMapper;

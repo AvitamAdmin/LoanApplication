@@ -19,8 +19,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/loanLimit")
 public class LoanLimitController extends BaseController {
-    @Autowired
-    private LoanLimitService loanLimitService;
+   @Autowired
+   LoanLimitService loanLimitService;
     @Autowired
     private LoanLimitRepository loanLimitRepository;
     @Autowired

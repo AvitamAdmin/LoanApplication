@@ -1,7 +1,7 @@
 package com.avitam.bankloanapplication.web.controllers.admin.user;
 
+import com.avitam.bankloanapplication.core.service.UserService;
 import com.avitam.bankloanapplication.model.entity.User;
-import com.avitam.bankloanapplication.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

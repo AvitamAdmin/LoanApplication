@@ -5,6 +5,8 @@ import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.model.entity.VerificationToken;
 
+import java.util.List;
+
 
 public interface UserService {
 
@@ -38,4 +40,7 @@ public interface UserService {
 
     void updatePassword(User user, String password);
 
+    List<User> getAll();
+
+    void delete(String username);
 }

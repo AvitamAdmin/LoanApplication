@@ -4,6 +4,7 @@ import com.avitam.bankloanapplication.model.dto.LoanLimitDto;
 import com.avitam.bankloanapplication.model.dto.LoanLimitWsDto;
 import com.avitam.bankloanapplication.model.entity.LoanLimit;
 import com.avitam.bankloanapplication.repository.LoanLimitRepository;
+import com.avitam.bankloanapplication.service.LoanLimitService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class LoanLimitServiceImpl {
+public class LoanLimitServiceImpl implements LoanLimitService {
     @Autowired
     private LoanLimitRepository loanLimitRepository;
     @Autowired
