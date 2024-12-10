@@ -5,12 +5,16 @@ import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.model.entity.VerificationToken;
 
+import java.util.List;
+
 
 public interface UserService {
 
 
     void save(CustomerDto request);
+    List<User> getAll();
 
+    void delete(String username);
 
     User findByUserName(String userName);
 

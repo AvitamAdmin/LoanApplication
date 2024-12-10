@@ -36,10 +36,10 @@ public class CustomerController extends BaseController {
     public CustomerWsDto getAllCustomers(@RequestBody CustomerWsDto customerWsDto){
 
         Pageable pageable=getPageable(customerWsDto.getPage(),customerWsDto.getSizePerPage(),customerWsDto.getSortDirection(),customerWsDto.getSortField());
-        CustomerDto customerDto = CollectionUtils.isNotEmpty(customerWsDto.getCustomerDtos()) ? customerWsDto.getCustomerDtos().get(0) : new CustomerDto();
+        CustomerDto customerDto = CollectionUtils.isNotEmpty(customerWsDto.getCustomerDtoList()) ? customerWsDto.getCustomerDtoList().get(0) : new CustomerDto();
         Customer customer = modelMapper.map(customerDto, Customer.class);
         Page<Customer> page=isSearchActive(customer) !=null ? customerRepository.findAll(Example.of(customer),pageable) : customerRepository.findAll(pageable);
-        customerWsDto.setCustomerDtos(modelMapper.map(page.getContent(), List.class));
+        customerWsDto.setCustomerDtoList(modelMapper.map(page.getContent(), List.class));
         customerWsDto.setTotalPages(page.getTotalPages());
         customerWsDto.setTotalRecords(page.getTotalElements());
         customerWsDto.setBaseUrl(ADMIN_CUSTOMER);
@@ -51,10 +51,10 @@ public class CustomerController extends BaseController {
     public CustomerWsDto getActiveCustomerList(@RequestBody CustomerWsDto request) {
         CustomerWsDto customerWsDto = new CustomerWsDto();
         List<Customer> customers = new ArrayList<>();
-        for(CustomerDto customerDto: request.getCustomerDtos()) {
+        for(CustomerDto customerDto: request.getCustomerDtoList()) {
             customers.add(customerRepository.findByRecordId(customerDto.getRecordId()));
         }
-        customerWsDto.setCustomerDtos(modelMapper.map(customers,List.class));
+        customerWsDto.setCustomerDtoList(modelMapper.map(customers,List.class));
         customerWsDto.setBaseUrl(ADMIN_CUSTOMER);
         return customerWsDto;
     }
@@ -75,19 +75,19 @@ public class CustomerController extends BaseController {
         return customerService.handleEdit(request);
     }
 
-    @GetMapping("/add")
-    @ResponseBody
-    public CustomerDto addCustomer() {
-        CustomerDto customerDto = new CustomerDto();
-        //customerDto.setCustomerList(customerRepository.findByStatusOrderByIdentifier(true));
-        customerDto.setBaseUrl(ADMIN_CUSTOMER);
-        return customerDto;
-    }
+//    @GetMapping("/add")
+//    @ResponseBody
+//    public CustomerDto addCustomer() {
+//        CustomerDto customerDto = new CustomerDto();
+//        //customerDto.setCustomerList(customerRepository.findByStatusOrderByIdentifier(true));
+//        customerDto.setBaseUrl(ADMIN_CUSTOMER);
+//        return customerDto;
+//    }
 
     @PostMapping("/delete")
     @ResponseBody
     public CustomerWsDto deleteCustomer(@RequestBody CustomerWsDto customerWsDto) {
-        for (CustomerDto customerDto : customerWsDto.getCustomerDtos()) {
+        for (CustomerDto customerDto : customerWsDto.getCustomerDtoList()) {
             customerRepository.deleteByRecordId(customerDto.getRecordId());
         }
         customerWsDto.setMessage("Data deleted successfully");

@@ -19,7 +19,7 @@ public class LoanStatusServiceImpl implements LoanStatusService{
     private LoanStatusRepository loanStatusRepository;
     @Autowired
     private ModelMapper modelMapper;
-    private static final String ADMIN_LOANSTATUS= "/admin/loanStatus";
+    private static final String ADMIN_LOANSTATUS= "/loan/loanStatus";
 
 
     public LoanStatusWsDto handleEdit(LoanStatusWsDto request) {

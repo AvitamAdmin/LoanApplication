@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/loanScoreResult")
+@RequestMapping("/loan/loanScoreResult")
 public class LoanScoreResultController extends BaseController {
     @Autowired
     private LoanScoreResultService loanScoreResultService;
@@ -29,7 +29,7 @@ public class LoanScoreResultController extends BaseController {
     @Autowired
     private ModelMapper modelMapper;
 
-    private static final String ADMIN_LOANSCORE = "/admin/loanScore" ;
+    private static final String ADMIN_LOANSCORE = "/loan/loanScore" ;
 
     @PostMapping
     @ResponseBody

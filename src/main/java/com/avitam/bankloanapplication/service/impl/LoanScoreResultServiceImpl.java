@@ -4,6 +4,7 @@ import com.avitam.bankloanapplication.model.dto.LoanScoreResultDto;
 import com.avitam.bankloanapplication.model.dto.LoanScoreResultWsDto;
 import com.avitam.bankloanapplication.model.entity.LoanScoreResult;
 import com.avitam.bankloanapplication.repository.LoanScoreResultRepository;
+import com.avitam.bankloanapplication.service.LoanScoreResultService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ import java.util.List;
 
 
 @Service
-public class LoanScoreResultServiceImpl {
-    private static final String ADMIN_LOANSCORE = "/admin/loanScoreResult";
+public class LoanScoreResultServiceImpl implements LoanScoreResultService {
+    private static final String ADMIN_LOANSCORE = "/loan/loanScoreResult";
     @Autowired
     private LoanScoreResultRepository loanScoreResultRepository;
 

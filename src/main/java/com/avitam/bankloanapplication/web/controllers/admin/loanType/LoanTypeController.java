@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/loanType")
+@RequestMapping("/loans/loanType")
 public class LoanTypeController extends BaseController {
 
-    private static final String ADMIN_LOANTYPE = "/admin/loanType";
+    private static final String ADMIN_LOANTYPE = "/loans/loanType";
     @Autowired
     private LoanTypeRepository loanTypeRepository;
     @Autowired

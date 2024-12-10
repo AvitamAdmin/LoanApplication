@@ -24,7 +24,6 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private ModelMapper modelMapper;
     public RoleWsDto createRole(RoleWsDto request) {
-        RoleWsDto roleWsDto = new RoleWsDto();
         Role role = new Role();
         List<RoleDto> roleDtos = request.getRoleDtoList();
         List<Role> roles = new ArrayList<>();

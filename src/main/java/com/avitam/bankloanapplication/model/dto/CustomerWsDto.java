@@ -14,6 +14,6 @@ import java.util.List;
 
 public class CustomerWsDto extends CommonWsDto {
 
-    List<CustomerDto> customerDtos;
+    List<CustomerDto> customerDtoList;
 
 }

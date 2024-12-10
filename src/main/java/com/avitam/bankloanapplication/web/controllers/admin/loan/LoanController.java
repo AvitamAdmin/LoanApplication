@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/loan")
+@RequestMapping("/loans/loan")
 public class LoanController extends BaseController {
     @Autowired
     private LoanService loanService;
@@ -27,7 +27,7 @@ public class LoanController extends BaseController {
     @Autowired
     private ModelMapper modelMapper;
 
-    private static final String ADMIN_LOAN= "/admin/loan";
+    private static final String ADMIN_LOAN= "/loans/loan";
 
 
     @PostMapping
@@ -41,7 +41,6 @@ public class LoanController extends BaseController {
         loanWsDto.setTotalPages(page.getTotalPages());
         loanWsDto.setTotalRecords(page.getTotalElements());
         return loanWsDto;
-
 
     }
 

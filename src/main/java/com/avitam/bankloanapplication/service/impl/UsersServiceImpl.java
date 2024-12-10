@@ -5,7 +5,6 @@ import com.avitam.bankloanapplication.model.entity.User;
 //import com.gulbalasalamov.bankloanapplication.security.JwtTokenProvider;
 
 
-import com.avitam.bankloanapplication.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,18 +14,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 
-public class UserServiceImpl implements UserService {
+public class UsersServiceImpl {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
 
-    public List<User> getAll() {
-        return userRepository.findAll();
-    }
-
-    public void delete(String username) {
-    }
 
    /* public String signIn(String userName, String password) {
         try {

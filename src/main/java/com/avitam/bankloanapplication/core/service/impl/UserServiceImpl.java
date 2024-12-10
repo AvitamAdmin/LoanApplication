@@ -75,6 +75,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAll() {
+        return List.of();
+    }
+
+    @Override
+    public void delete(String username) {
+
+    }
+
+    @Override
     public User findByUserName(String userName) {
         return userRepository.findByUsername(userName);
     }

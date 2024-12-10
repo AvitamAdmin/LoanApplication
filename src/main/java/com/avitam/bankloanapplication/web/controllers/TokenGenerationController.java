@@ -41,25 +41,6 @@ public class TokenGenerationController extends BaseController {
         return new JwtResponse(token);
     }
 
-    @PostMapping("api/generateOTP")
-    public ResponseEntity<String> generateOTP(@RequestBody JwtRequest jwtRequest){
 
-        /*UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
-        User user = userRepository.findByUsername(userDetails.getUsername());*/
-
-        Twilio.init(System.getenv("TWILIO_ACCOUNT_SID"), System.getenv("TWILIO_AUTH_TOKEN"));
-
-        Verification verification = Verification.creator(
-                        "VA41d3e9616fccd53101561916756f8281", // this is your verification sid
-                        jwtRequest.getUsername(), //this is your Twilio verified recipient phone number
-                        "sms") // this is your channel type
-                .create();
-
-        System.out.println(verification.getStatus());
-
-        log.info("OTP has been successfully generated, and awaits your verification {}", LocalDateTime.now());
-
-        return new ResponseEntity<>("Your OTP has been sent to your verified phone number", HttpStatus.OK);
-    }
 
 }

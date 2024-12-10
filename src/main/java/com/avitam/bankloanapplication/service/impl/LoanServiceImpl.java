@@ -29,7 +29,7 @@ public class LoanServiceImpl implements LoanService {
     private ModelMapper modelMapper;
 
 
-    public static final String ADMIN_lOAN = "/admin/loan";
+    public static final String ADMIN_lOAN = "/loans/loan";
 
 
     public LoanWsDto createLoan(LoanWsDto request) {

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/loanStatus")
+@RequestMapping("/loans/loanStatus")
 public class LoanStatusController extends BaseController {
     @Autowired
     private LoanStatusService loanStatusService;
@@ -25,7 +25,7 @@ public class LoanStatusController extends BaseController {
     private LoanStatusRepository loanStatusRepository;
     @Autowired
     private ModelMapper modelMapper;
-    private static final String ADMIN_LOANSTATUS= "/admin/loanStatus";
+    private static final String ADMIN_LOANSTATUS= "/loans/loanStatus";
 
     @PostMapping
     public LoanStatusWsDto getAllLoanStatus(@RequestBody LoanStatusWsDto loanStatusWsDto){

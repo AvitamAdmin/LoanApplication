@@ -46,10 +46,10 @@ public class AdminController extends BaseController{
     @ResponseBody
     public CustomerWsDto getAllUsers(@RequestBody CustomerWsDto customerWsDto) {
         Pageable pageable=getPageable(customerWsDto.getPage(),customerWsDto.getSizePerPage(),customerWsDto.getSortDirection(),customerWsDto.getSortField());
-        CustomerDto customerDto = CollectionUtils.isNotEmpty(customerWsDto.getCustomerDtos()) ? customerWsDto.getCustomerDtos().get(0) : new CustomerDto();
+        CustomerDto customerDto = CollectionUtils.isNotEmpty(customerWsDto.getCustomerDtoList()) ? customerWsDto.getCustomerDtoList().get(0) : new CustomerDto();
         Customer customer = modelMapper.map(customerDto, Customer.class);
         Page<Customer> page=isSearchActive(customer) !=null ? customerRepository.findAll(Example.of(customer),pageable) : customerRepository.findAll(pageable);
-        customerWsDto.setCustomerDtos(modelMapper.map(page.getContent(), List.class));
+        customerWsDto.setCustomerDtoList(modelMapper.map(page.getContent(), List.class));
         customerWsDto.setBaseUrl(ADMIN_USER);
         customerWsDto.setTotalPages(page.getTotalPages());
         customerWsDto.setTotalRecords(page.getTotalElements());
@@ -61,10 +61,10 @@ public class AdminController extends BaseController{
     public CustomerWsDto getLoanType(@RequestBody CustomerWsDto request) {
         CustomerWsDto customerWsDto = new CustomerWsDto();
         List<Customer> customers = new ArrayList<>();
-        for(CustomerDto customerDto: request.getCustomerDtos()) {
+        for(CustomerDto customerDto: request.getCustomerDtoList()) {
             customers.add(customerRepository.findByRecordId(customerDto.getRecordId()));
         }
-        customerWsDto.setCustomerDtos(modelMapper.map(customers,List.class));
+        customerWsDto.setCustomerDtoList(modelMapper.map(customers,List.class));
         customerWsDto.setBaseUrl(ADMIN_USER);
 
         return customerWsDto;
@@ -75,10 +75,10 @@ public class AdminController extends BaseController{
     public CustomerWsDto editLoanApplication(@RequestBody CustomerWsDto request) {
         CustomerWsDto customerWsDto = new CustomerWsDto();
         List<Customer> customers=new ArrayList<>();
-        for(CustomerDto customerDto:request.getCustomerDtos()) {
+        for(CustomerDto customerDto:request.getCustomerDtoList()) {
             customers.add(customerRepository.findByRecordId(customerDto.getRecordId()));
         }
-        customerWsDto.setCustomerDtos(modelMapper.map(customers,List.class));
+        customerWsDto.setCustomerDtoList(modelMapper.map(customers,List.class));
         customerWsDto.setBaseUrl(ADMIN_USER);
         return customerWsDto;
     }
@@ -95,7 +95,7 @@ public class AdminController extends BaseController{
     @ResponseBody
     public CustomerWsDto deleteUser(@RequestBody CustomerWsDto customerWsDto) {
 
-        for (CustomerDto customerDto : customerWsDto.getCustomerDtos()) {
+        for (CustomerDto customerDto : customerWsDto.getCustomerDtoList()) {
             customerRepository.deleteByRecordId(customerDto.getRecordId());
         }
         customerWsDto.setBaseUrl(ADMIN_USER);
