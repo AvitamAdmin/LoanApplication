@@ -33,6 +33,7 @@ public class LoanStatusServiceImpl implements LoanStatusService{
                 loanStatus = loanStatusRepository.findByRecordId(loanStatusDto.getRecordId());
                 modelMapper.map(loanStatusDto, loanStatus);
                 loanStatusRepository.save(loanStatus);
+                request.setMessage("Data updated successfully");
             } else {
                 loanStatus = modelMapper.map(loanStatusDto, LoanStatus.class);
                 loanStatus.setStatus(true);

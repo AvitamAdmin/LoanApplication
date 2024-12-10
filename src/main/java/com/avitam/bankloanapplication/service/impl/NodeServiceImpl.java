@@ -97,6 +97,7 @@ public class NodeServiceImpl implements NodeService {
             if (nodeDto.getRecordId() != null) {
                 node = nodeRepository.findByRecordId(nodeDto.getRecordId());
                 modelMapper.map(nodeDto, node);
+                request.setMessage("Data updated successfully");
             } else {
                 node = modelMapper.map(nodeDto, Node.class);
                 node.setCreationTime(new Date());

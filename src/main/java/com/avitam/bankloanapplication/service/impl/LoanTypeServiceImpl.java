@@ -34,6 +34,7 @@ public class LoanTypeServiceImpl implements LoanTypeService {
                 loanType = loanTypeRepository.findByRecordId(loan.getRecordId());
                 modelMapper.map(loan, loanType);
                 loanTypeRepository.save(loanType);
+                request.setMessage("Data updated successfully");
             } else {
                 loanType = modelMapper.map(loan, LoanType.class);
                 loanType.setStatus(true);

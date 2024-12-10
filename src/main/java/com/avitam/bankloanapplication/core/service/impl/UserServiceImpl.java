@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
         {
             customer = customerRepository.findByRecordId(request.getRecordId());
             modelMapper.map(request, customer);
+            request.setMessage("Data updated successfully");
         }
         else {
             customer = modelMapper.map(request,Customer.class);

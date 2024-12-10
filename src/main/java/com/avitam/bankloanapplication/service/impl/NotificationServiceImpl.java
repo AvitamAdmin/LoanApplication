@@ -41,6 +41,9 @@ public class NotificationServiceImpl implements NotificationService {
                 notification = notificationRepository.findByRecordId(notificationDto.getRecordId());
                 modelMapper.map(notificationDto, notification);
                 notificationRepository.save(notification);
+                request.setMessage("Data updated successfully");
+
+
             } else {
                 notification = modelMapper.map(notificationDto, Notification.class);
                 notification.setCreationTime(new Date());

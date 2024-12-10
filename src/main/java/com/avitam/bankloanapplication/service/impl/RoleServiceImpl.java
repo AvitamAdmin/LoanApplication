@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +31,7 @@ public class RoleServiceImpl implements RoleService {
                 role = roleRepository.findByRecordId(roleDto.getRecordId());
                 modelMapper.map(roleDto, role);
                 roleRepository.save(role);
+                request.setMessage("Data updated successfully");
             } else {
                 role = modelMapper.map(roleDto, Role.class);
                 role.setCreationTime(new Date());
