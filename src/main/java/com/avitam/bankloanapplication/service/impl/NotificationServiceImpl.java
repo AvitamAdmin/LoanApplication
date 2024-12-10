@@ -53,6 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
             notificationRepository.save(notification);
             notifications.add(notification);
             request.setBaseUrl(ADMIN_NOTIFICATION);
+            request.setMessage("Data added Successfully");
 
         }
         request.setNotificationDtoList(modelMapper.map(notifications,List.class));

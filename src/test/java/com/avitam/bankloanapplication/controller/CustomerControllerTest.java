@@ -1,9 +1,10 @@
 package com.avitam.bankloanapplication.controller;
 
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.avitam.bankloanapplication.model.dto.CustomerDTO;
+
 import com.avitam.bankloanapplication.model.entity.Customer;
 
 import com.avitam.bankloanapplication.service.CustomerService;
@@ -26,12 +27,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.byLessThan;
-import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -115,34 +116,11 @@ class CustomerControllerTest {
 
     }
 
-//    @Test
-//    void updateCustomer() {
-//    }
-//
-//    @Test
-//    void updateCustomerPartially() {
-//    }
-//
-//    @Test
-//    void deleteCustomer() {
-//    }
 
 
     private Customer createDummyCustomer() {
         return new Customer("11111111111", "Gulbala", "Salamov", 100.0, "Male", 12, "1234", "g@gmail.com", 1, null);
     }
 
-//    private CustomerDTO createDummyCustomerDTO() {
-//        return new CustomerDTO("11111111111", "John", "Cloud", "1", "g@g.com", 10.0, "Female", 5, 1, null);
-//    }
 
-//    private List<CustomerDTO> createDummyCustomerDtoList() {
-//
-//        List<CustomerDTO> customerDTOList = new ArrayList<>();
-//
-//        CustomerDTO customerDTO = createDummyCustomerDTO();
-//        customerDTOList.add(customerDTO);
-//
-//        return customerDTOList;
-//    }
 }

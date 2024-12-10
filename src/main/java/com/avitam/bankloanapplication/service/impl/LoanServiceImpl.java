@@ -54,6 +54,7 @@ public class LoanServiceImpl implements LoanService {
             loanRepository.save(loan);
             loans.add(loan);
             loanDto.setBaseUrl(ADMIN_lOAN);
+            request.setMessage("Data added Successfully");
         }
         request.setLoanDtoList(modelMapper.map(loans,List.class));
         return request;

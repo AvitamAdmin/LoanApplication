@@ -45,6 +45,7 @@ public class LoanStatusServiceImpl implements LoanStatusService{
             loanStatusRepository.save(loanStatus);
             loanStatuses.add(loanStatus);
             request.setBaseUrl(ADMIN_LOANSTATUS);
+            request.setMessage("Data added Successfully");
         }
         request.setLoanStatusDtos(modelMapper.map(loanStatuses,List.class));
         return request;

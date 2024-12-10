@@ -1,7 +1,7 @@
 package com.avitam.bankloanapplication.service;
 
 import com.avitam.bankloanapplication.exception.CustomerNotFoundException;
-import com.avitam.bankloanapplication.model.dto.CustomerDTO;
+import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
@@ -43,18 +43,18 @@ class CustomerServiceTest {
 
         //Given
         String nationalIdentityNumber = "11111111111";
-        CustomerDTO expectedCustomerDTO = createDummyCustomerDTO();
+        CustomerDto expectedCustomerDTO = createDummyCustomerDTO();
         //CustomerDTO expectedCustomerDTO = mock(CustomerDTO.class);
         when(customerServiceUnderTest.getCustomerByNationalIdentityNumber(nationalIdentityNumber)).thenReturn(expectedCustomerDTO);
 
         Customer actualCustomer = customerRepository.findByNationalIdentityNumber(nationalIdentityNumber).get();
-        assertEquals(nationalIdentityNumber,actualCustomer.getNationalIdentityNumber());
+        assertEquals(nationalIdentityNumber, actualCustomer.getNationalIdentityNumber());
     }
 
     @Test
     void shouldGetAllCustomers() {
-        var customer = mock(CustomerDTO.class);
-        var expCustomerList = new ArrayList<CustomerDTO>();
+        var customer = mock(CustomerDto.class);
+        var expCustomerList = new ArrayList<CustomerDto>();
         expCustomerList.add(customer);
 
         when(customerServiceUnderTest.getAllCustomers()).thenReturn(expCustomerList);
@@ -109,17 +109,18 @@ class CustomerServiceTest {
         return new Customer("11111111111", "Gulbala", "Salamov", 100.0, "Male", 12, "1234", "g@gmail.com", 1, null);
     }
 
-    private CustomerDTO createDummyCustomerDTO() {
-        return new CustomerDTO("11111111111", "John", "Cloud", "1", "g@g.com", 10.0, "Female", 5, 1, null);
+    private CustomerDto createDummyCustomerDTO() {
+        return new CustomerDto("11111111111", "John", "Cloud", "1", "g@g.com", 10.0, "Female", 5, 1, null);
     }
 
-    private List<CustomerDTO> createDummyCustomerDtoList() {
+    private List<CustomerDto> createDummyCustomerDtoList() {
 
-        List<CustomerDTO> customerDTOList = new ArrayList<>();
 
-        CustomerDTO customerDTO = createDummyCustomerDTO();
-        customerDTOList.add(customerDTO);
+        List<CustomerDto> customerDTOList = new ArrayList<>();
+        customerDTOList = (List<CustomerDto>) createDummyCustomerDTO();
+        customerDTOList.add((CustomerDto) customerDTOList);
 
         return customerDTOList;
+
     }
 }

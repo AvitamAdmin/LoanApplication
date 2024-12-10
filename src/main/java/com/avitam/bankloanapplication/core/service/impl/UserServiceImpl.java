@@ -196,15 +196,15 @@ public class UserServiceImpl implements UserService {
         //user.setResetPasswordToken(null);
         userRepository.save(user);
     }
-
-    @Override
-    public List<User> getAll() {
-        return List.of();
-    }
-
-    @Override
-    public void delete(String username) {
-
-    }
+//
+//    @Override
+//    public List<User> getAll() {
+//        return List.of();
+//    }
+//
+//    @Override
+//    public void delete(String username) {
+//
+//    }
 
 }

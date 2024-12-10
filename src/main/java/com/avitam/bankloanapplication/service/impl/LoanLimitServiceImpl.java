@@ -44,6 +44,7 @@ public class LoanLimitServiceImpl implements LoanLimitService {
             loanLimitRepository.save(loanLimit);
             loanLimits.add(loanLimit);
             request.setBaseUrl(ADMIN_LOANLIMIT);
+            request.setMessage("Data added Successfully");
         }
         request.setLoanLimitDtos(modelMapper.map(loanLimits,List.class));
         return request;

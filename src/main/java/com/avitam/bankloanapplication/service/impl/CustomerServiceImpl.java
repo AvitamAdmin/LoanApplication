@@ -53,6 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerRepository.save(customer);
             customers.add(customer);
             request.setBaseUrl(ADMIN_CUSTOMER);
+            request.setMessage("Data added Successfully");
         }
         request.setCustomerDtoList(modelMapper.map(customers,List.class));
         return request;
@@ -66,5 +67,15 @@ public class CustomerServiceImpl implements CustomerService {
             customerRepository.save(customerOptional);
         }
 
+    }
+
+    @Override
+    public Object getCustomerByNationalIdentityNumber(Object o) {
+        return null;
+    }
+
+    @Override
+    public Object getAllCustomers() {
+        return null;
     }
 }

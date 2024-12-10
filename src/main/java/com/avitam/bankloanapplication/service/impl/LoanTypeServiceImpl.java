@@ -46,6 +46,7 @@ public class LoanTypeServiceImpl implements LoanTypeService {
             loanTypeRepository.save(loanType);
             loanTypes.add(loanType);
             request.setBaseUrl(ADMIN_LOANTYPE);
+            request.setMessage("Data added Successfully");
         }
         request.setLoanTypeDtoList(modelMapper.map(loanTypes,List.class));
         return request;

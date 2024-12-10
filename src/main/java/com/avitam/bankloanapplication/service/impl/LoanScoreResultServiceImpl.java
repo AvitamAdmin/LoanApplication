@@ -46,6 +46,7 @@ public class LoanScoreResultServiceImpl implements LoanScoreResultService {
         loanScoreResultRepository.save(loanScoreResult);
         loanScoreResults.add(loanScoreResult);
         request.setBaseUrl(ADMIN_LOANSCORE);
+            request.setMessage("Data added Successfully");
         }
         request.setLoanScoreDtos(modelMapper.map(loanScoreResults,List.class));
         return request;

@@ -42,7 +42,7 @@ public interface UserService {
 
     void updatePassword(User user, String password);
 
-    List<User> getAll();
-
-    void delete(String username);
+//    List<User> getAll();
+//
+//    void delete(String username);
 }

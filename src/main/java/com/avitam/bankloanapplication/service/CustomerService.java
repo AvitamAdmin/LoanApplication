@@ -12,4 +12,8 @@ public interface CustomerService {
     CustomerWsDto handleEdit(CustomerWsDto request);
 
     void updateByRecordId(String recordId);
+
+    Object getCustomerByNationalIdentityNumber(Object o);
+
+    Object getAllCustomers();
 }
