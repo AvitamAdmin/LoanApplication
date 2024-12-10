@@ -41,6 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
                 customer = customerRepository.findByRecordId(customerDto.getRecordId());
                 modelMapper.map(customerDto, customer);
                 customerRepository.save(customer);
+                request.setMessage("Data updated successfully");
             } else {
                 customer = modelMapper.map(customerDto, Customer.class);
                 customer.setCreationTime(new Date());

@@ -59,6 +59,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
                 loanApplication = loanApplicationRepository.findByRecordId(loanApplicationDto.getRecordId());
                 modelMapper.map(loanApplicationDto, loanApplication);
                 loanApplicationRepository.save(loanApplication);
+                request.setMessage("Data updated successfully");
             } else {
                 loanApplication = modelMapper.map(loanApplicationDto, LoanApplication.class);
                 loanApplication.setStatus(true);
