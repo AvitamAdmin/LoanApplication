@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 public class LoanScoreResultServiceImpl implements LoanScoreResultService {
-    private static final String ADMIN_LOANSCORE = "/admin/loanScoreResult";
+    private static final String ADMIN_LOANSCORE = "/loans/loanScoreResult";
     @Autowired
     private LoanScoreResultRepository loanScoreResultRepository;
 

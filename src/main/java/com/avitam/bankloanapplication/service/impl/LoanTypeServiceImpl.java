@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class LoanTypeServiceImpl implements LoanTypeService {
 
-    private static final String ADMIN_LOANTYPE = "/admin/loanType";
+    private static final String ADMIN_LOANTYPE = "/loans/loanType";
     @Autowired
     private LoanTypeRepository loanTypeRepository;
     @Autowired

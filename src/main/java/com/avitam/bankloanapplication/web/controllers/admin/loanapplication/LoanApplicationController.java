@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/loan/loanApplication")
+@RequestMapping("/loans/loanApplication")
 public class LoanApplicationController extends BaseController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class LoanApplicationController extends BaseController {
     @Autowired
     private LoanApplicationServiceImpl loanApplicationServiceImpl;
 
-    public static final String ADMIN_LOANAPPLICATION = "/loan/loanApplication";
+    public static final String ADMIN_LOANAPPLICATION = "/loans/loanApplication";
 
     @PostMapping
     @ResponseBody

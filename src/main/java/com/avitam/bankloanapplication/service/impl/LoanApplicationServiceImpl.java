@@ -45,7 +45,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     @Autowired
     private LoanLimitRepository loanLimitRepository;
 
-    public static final String ADMIN_LOANAPPLICATION = "/loan/loanApplication";
+    public static final String ADMIN_LOANAPPLICATION = "/loans/loanApplication";
 
 
     public LoanApplicationWsDto handleEdit(LoanApplicationWsDto request) {
