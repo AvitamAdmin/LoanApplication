@@ -15,7 +15,7 @@ public class Mapper {
 //        customerDTO.setMonthlyIncome(customer.getMonthlyIncome());
 //        customerDTO.setGender(customer.getGender());
 //        customerDTO.setAge(customer.getAge());
-//        customerDTO.setLoanScore(customer.getLoanScore());
+//        customerDTO.setLoanScoreResult(customer.getLoanScoreResult());
 //        customerDTO.setLoanApplications(customer.getLoanApplications());
         return customerDTO;
     }
@@ -32,7 +32,7 @@ public class Mapper {
 //        customer.setMonthlyIncome(customerDTO.getMonthlyIncome());
 //        customer.setGender(customerDTO.getGender());
 //        customer.setAge(customerDTO.getAge());
-//        customer.setLoanScore(customerDTO.getLoanScore());
+//        customer.setLoanScoreResult(customerDTO.getLoanScoreResult());
 //        customer.setLoanApplications(customerDTO.getLoanApplications());
         return customer;
     }

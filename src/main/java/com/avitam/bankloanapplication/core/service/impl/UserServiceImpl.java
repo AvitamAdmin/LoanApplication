@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Date;
+
 import java.util.List;
 import java.util.Set;
 
@@ -194,6 +195,16 @@ public class UserServiceImpl implements UserService {
 
         //user.setResetPasswordToken(null);
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return List.of();
+    }
+
+    @Override
+    public void delete(String username) {
+
     }
 
 }

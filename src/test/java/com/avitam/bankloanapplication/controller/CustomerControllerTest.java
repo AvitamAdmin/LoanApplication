@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.byLessThan;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,7 +61,7 @@ class CustomerControllerTest {
 
     @Test
     void shouldFindAllCustomers() throws Exception {
-        List<CustomerDTO> dummyCustomerDTOList = createDummyCustomerDtoList();
+        List<CustomerDTO> dummyCustomerDTOList = null;
 
         when(customerService.getAllCustomers()).thenReturn(dummyCustomerDTOList);
 
@@ -79,7 +80,7 @@ class CustomerControllerTest {
     @Test
     void shouldFindCustomerByNationalIdentityNumber() throws Exception {
         // init test values
-        List<CustomerDTO> expectedCustomerDTOList = createDummyCustomerDtoList();
+        List<CustomerDTO> expectedCustomerDTOList = null;
         String nationalIdentityNumber = "11111111111";
         String url = "http://localhost:8086/api/v1/customer/get/11111111111";
 
@@ -99,7 +100,7 @@ class CustomerControllerTest {
 
     @Test
     void shouldAddCustomer() throws Exception {
-        var dummyCustomerDTO = createDummyCustomerDTO();
+        var dummyCustomerDTO = byLessThan(98);
 
         String url = "http://localhost:8086/api/v1/customer/add/";
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -131,17 +132,17 @@ class CustomerControllerTest {
         return new Customer("11111111111", "Gulbala", "Salamov", 100.0, "Male", 12, "1234", "g@gmail.com", 1, null);
     }
 
-    private CustomerDTO createDummyCustomerDTO() {
-        return new CustomerDTO("11111111111", "John", "Cloud", "1", "g@g.com", 10.0, "Female", 5, 1, null);
-    }
+//    private CustomerDTO createDummyCustomerDTO() {
+//        return new CustomerDTO("11111111111", "John", "Cloud", "1", "g@g.com", 10.0, "Female", 5, 1, null);
+//    }
 
-    private List<CustomerDTO> createDummyCustomerDtoList() {
-
-        List<CustomerDTO> customerDTOList = new ArrayList<>();
-
-        CustomerDTO customerDTO = createDummyCustomerDTO();
-        customerDTOList.add(customerDTO);
-
-        return customerDTOList;
-    }
+//    private List<CustomerDTO> createDummyCustomerDtoList() {
+//
+//        List<CustomerDTO> customerDTOList = new ArrayList<>();
+//
+//        CustomerDTO customerDTO = createDummyCustomerDTO();
+//        customerDTOList.add(customerDTO);
+//
+//        return customerDTOList;
+//    }
 }

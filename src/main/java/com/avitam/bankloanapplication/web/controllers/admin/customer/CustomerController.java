@@ -32,7 +32,6 @@ public class CustomerController extends BaseController {
     public static final String ADMIN_CUSTOMER = "/admin/customer";
 
     @PostMapping
-    @ResponseBody
     public CustomerWsDto getAllCustomers(@RequestBody CustomerWsDto customerWsDto){
 
         Pageable pageable=getPageable(customerWsDto.getPage(),customerWsDto.getSizePerPage(),customerWsDto.getSortDirection(),customerWsDto.getSortField());
