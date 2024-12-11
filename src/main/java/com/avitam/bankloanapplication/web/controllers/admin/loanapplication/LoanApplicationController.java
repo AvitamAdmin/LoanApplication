@@ -58,11 +58,7 @@ public class LoanApplicationController extends BaseController {
     @ResponseBody
     public LoanApplicationWsDto getLoanType(@RequestBody LoanApplicationWsDto request) {
         LoanApplicationWsDto loanApplicationWsDto = new LoanApplicationWsDto();
-        List<LoanApplication> loanApplications = new ArrayList<>();
-        for(LoanApplicationDto loanApplicationDto: request.getLoanApplicationDtos()) {
-            loanApplications.add(loanApplicationRepository.findByRecordId(loanApplicationDto.getRecordId()));
-        }
-        loanApplicationWsDto.setLoanApplicationDtos(modelMapper.map(loanApplications,List.class));
+        loanApplicationWsDto.setLoanApplicationDtos(modelMapper.map(loanApplicationRepository.findByStatusOrderByIdentifier(true),List.class));
         loanApplicationWsDto.setBaseUrl(ADMIN_LOANAPPLICATION);
         return loanApplicationWsDto;
     }

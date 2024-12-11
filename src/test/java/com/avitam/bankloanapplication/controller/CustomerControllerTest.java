@@ -1,6 +1,7 @@
 package com.avitam.bankloanapplication.controller;
 
 
+import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -62,7 +63,7 @@ class CustomerControllerTest {
 
     @Test
     void shouldFindAllCustomers() throws Exception {
-        List<CustomerDTO> dummyCustomerDTOList = null;
+        List<CustomerDto> dummyCustomerDTOList = null;
 
         when(customerService.getAllCustomers()).thenReturn(dummyCustomerDTOList);
 
@@ -73,7 +74,7 @@ class CustomerControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
-        List<CustomerDTO> actualCustomerDTOList = new ObjectMapper().readValue(response.getContentAsString(), new TypeReference<List<CustomerDTO>>() {
+        List<CustomerDto> actualCustomerDTOList = new ObjectMapper().readValue(response.getContentAsString(), new TypeReference<List<CustomerDto>>() {
         });
         Assert.assertEquals(dummyCustomerDTOList.size(), actualCustomerDTOList.size());
     }
@@ -81,7 +82,7 @@ class CustomerControllerTest {
     @Test
     void shouldFindCustomerByNationalIdentityNumber() throws Exception {
         // init test values
-        List<CustomerDTO> expectedCustomerDTOList = null;
+        List<CustomerDto> expectedCustomerDTOList = null;
         String nationalIdentityNumber = "11111111111";
         String url = "http://localhost:8086/api/v1/customer/get/11111111111";
 
@@ -95,7 +96,7 @@ class CustomerControllerTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        CustomerDTO actualCustomerDTO = new ObjectMapper().readValue(response.getContentAsString(), CustomerDTO.class);
+        CustomerDto actualCustomerDTO = new ObjectMapper().readValue(response.getContentAsString(), CustomerDto.class);
         Assert.assertEquals(expectedCustomerDTOList.get(0), actualCustomerDTO);
     }
 

@@ -18,7 +18,8 @@ public class CustomerServiceImpl implements CustomerService {
     private ModelMapper modelMapper;
     @Autowired
     private CoreService coreService;
-        @Autowired
+    @Autowired
+
     private CustomerRepository customerRepository;
 
     public static final String ADMIN_CUSTOMER = "/admin/customer";
