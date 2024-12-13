@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class BaseEntity {
 
-    @Id
+
     private ObjectId id;
     private String name;
     private String creator;

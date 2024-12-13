@@ -6,15 +6,16 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @ToString
-public class CommonWsDto extends PaginationDto{
+public class KYCDto extends CommonDto{
+    private String customerId;
 
-    private String baseUrl;
-    private String recordId;
-    private String message;
-    private Boolean success = true;
+    private String panNumber;
 
+    private String aadharNumber;
+
+    private MultipartFile image;
 }

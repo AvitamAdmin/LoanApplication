@@ -33,6 +33,7 @@ public class LoanScoreResultServiceImpl implements LoanScoreResultService {
             modelMapper.map(loanScoreDto, loanScoreResult);
             loanScoreResult.setLastModified(new Date());
             loanScoreResultRepository.save(loanScoreResult);
+            request.setMessage("Data updated successfully");
         }
         else {
             loanScoreResult = modelMapper.map(loanScoreDto, LoanScoreResult.class);

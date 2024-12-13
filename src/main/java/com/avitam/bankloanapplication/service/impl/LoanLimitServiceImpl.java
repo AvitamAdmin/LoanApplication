@@ -32,6 +32,7 @@ public class LoanLimitServiceImpl implements LoanLimitService {
                 loanLimit = loanLimitRepository.findByRecordId(loanLimitDto.getRecordId());
                 modelMapper.map(loanLimitDto, loanLimit);
                 loanLimitRepository.save(loanLimit);
+                request.setMessage("Data updated successfully");
             } else {
                 loanLimit = modelMapper.map(loanLimitDto, LoanLimit.class);
                 loanLimit.setCreationTime(new Date());
