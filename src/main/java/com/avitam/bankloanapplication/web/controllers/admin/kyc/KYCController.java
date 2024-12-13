@@ -1,16 +1,13 @@
 package com.avitam.bankloanapplication.web.controllers.admin.kyc;
 
-import com.avitam.bankloanapplication.model.dto.CustomerDto;
-import com.avitam.bankloanapplication.model.dto.KYCDto;
-import com.avitam.bankloanapplication.model.dto.KYCWsDto;
+import com.avitam.bankloanapplication.model.dto.*;
+
 import com.avitam.bankloanapplication.model.entity.KYC;
 import com.avitam.bankloanapplication.repository.KYCRepository;
 import com.avitam.bankloanapplication.service.KycService;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
 import org.apache.commons.collections4.CollectionUtils;
 
-import org.bouncycastle.pqc.jcajce.provider.NTRU;
-import org.checkerframework.checker.units.qual.A;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -56,6 +53,14 @@ public class KYCController extends BaseController {
         kycWsDto.setKycDtoList(modelMapper.map(kycRepository.findByStatusOrderByIdentifier(true),List.class));
         kycWsDto.setBaseUrl(ADMIN_KYC);
         return kycWsDto;
+
+//        KYCWsDto kycWsDto = new KYCWsDto();
+//        List<KYCDto> kycDtos;
+//        List<KYC> kycs = kycRepository.findByStatusOrderByIdentifier(true);
+//        kycDtos=modelMapper.map(kycs,List.class);
+//        kycWsDto.setKycDtoList(kycDtos);
+//        kycWsDto.setBaseUrl(ADMIN_KYC);
+//        return kycWsDto;
     }
     @PostMapping(value = "/edit" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public KYCWsDto handelEdit(@ModelAttribute KYCWsDto request){

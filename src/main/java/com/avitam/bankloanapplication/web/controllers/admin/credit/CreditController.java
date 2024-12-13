@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/admin/credit")
 public class CreditController extends BaseController {
     @Autowired
     private CreditRepository creditRepository;
@@ -48,6 +50,14 @@ public class CreditController extends BaseController {
         creditWsDto.setCreditDtoList(modelMapper.map(creditRepository.findByStatusOrderByIdentifier(true),List.class));
         creditWsDto.setBaseUrl(ADMIN_CREDIT);
         return creditWsDto;
+
+//        CreditWsDto creditWsDto = new CreditWsDto();
+//        List<CreditDto> creditDtoList;
+//        List<Credit> credits = creditRepository.findByStatusOrderByIdentifier(true);
+//        creditDtoList=modelMapper.map(credits,List.class);
+//        creditWsDto.setCreditDtoList(creditDtoList);
+//        creditWsDto.setBaseUrl(ADMIN_CREDIT);
+//        return creditWsDto;
     }
 
     @PostMapping("/getEdit")
@@ -63,14 +73,7 @@ public class CreditController extends BaseController {
         return creditService.handelEdit(request);
     }
 
-    @PostMapping("/add")
-    public CreditWsDto addCredit (){
-        CreditWsDto creditWsDto = new CreditWsDto();
-        creditWsDto.setCreditDtoList(modelMapper.map(creditRepository.findByStatusOrderByIdentifier(true),List.class));
-        creditWsDto.setBaseUrl(ADMIN_CREDIT);
-        return creditWsDto;
 
-    }
 
     @PostMapping("/delete")
     public CreditWsDto deleteCredit(@RequestBody CreditWsDto creditWsDto){

@@ -5,16 +5,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bson.types.Binary;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @ToString
-@Document("credit")
-public class Credit extends BaseEntity{
-    private Integer creditScore;
+public class WebsiteSetting extends BaseEntity{
 
-    private Binary photo;
+    private Binary logo;
+    private Binary favicon;
 
 }

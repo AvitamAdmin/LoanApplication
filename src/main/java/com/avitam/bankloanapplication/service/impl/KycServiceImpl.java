@@ -58,6 +58,7 @@ public class KycServiceImpl implements KycService {
                     }
                 }
                 kycRepository.save(kyc);
+                request.setMessage("Data added successfully");
             }
 
             if (request.getRecordId()== null){
@@ -66,7 +67,7 @@ public class KycServiceImpl implements KycService {
             kycRepository.save(kyc);
             kycs.add(kyc);
             request.setBaseUrl(ADMIN_KYC);
-            request.setMessage("Data Deleted Successfully");
+
 
         }
         request.setKycDtoList(modelMapper.map(kycs, List.class));

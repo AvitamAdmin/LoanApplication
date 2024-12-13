@@ -54,13 +54,14 @@ public class CreditServiceImpl implements CreditService {
                     }
                 }
                 creditRepository.save(credit);
+                request.setMessage("Data Added Successfully");
             }
             if(request.getRecordId() == null){
                 credit.setRecordId(String.valueOf(credit.getId().getTimestamp()));
             }
             creditRepository.save(credit);
             credits.add(credit);
-            request.setMessage("Data Deleted Successfully");
+
             request.setBaseUrl(ADMIN_CREDIT);
         }
         request.setCreditDtoList(modelMapper.map(credits,List.class));
