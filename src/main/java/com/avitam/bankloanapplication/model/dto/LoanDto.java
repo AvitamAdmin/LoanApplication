@@ -1,10 +1,8 @@
 package com.avitam.bankloanapplication.model.dto;
 
-import com.avitam.bankloanapplication.model.entity.Loan;
 import lombok.*;
-
 import java.util.Date;
-import java.util.List;
+
 
 @Setter
 @Getter
@@ -20,5 +18,7 @@ public class LoanDto extends CommonDto{
     private String loanApplicationId;
     private String loanStatus;
     private String loanScoreResult;
+    private String loanType;
+
 
 }

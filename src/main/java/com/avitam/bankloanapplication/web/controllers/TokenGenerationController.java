@@ -4,19 +4,14 @@ import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.tokenGeneration.JWTUtility;
 import com.avitam.bankloanapplication.tokenGeneration.JwtRequest;
 import com.avitam.bankloanapplication.tokenGeneration.JwtResponse;
-import com.twilio.Twilio;
-import com.twilio.rest.verify.v2.service.Verification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 
 @RestController
 @Slf4j

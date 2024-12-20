@@ -2,8 +2,10 @@ package com.avitam.bankloanapplication.service.impl;
 
 import com.avitam.bankloanapplication.model.dto.LoanDto;
 import com.avitam.bankloanapplication.model.dto.LoanWsDto;
-import com.avitam.bankloanapplication.repository.CustomerRepository;
-import com.avitam.bankloanapplication.repository.LoanRepository;
+import com.avitam.bankloanapplication.model.entity.LoanScoreResult;
+import com.avitam.bankloanapplication.model.entity.LoanStatus;
+import com.avitam.bankloanapplication.model.entity.LoanType;
+import com.avitam.bankloanapplication.repository.*;
 
 import com.avitam.bankloanapplication.model.entity.Loan;
 import com.avitam.bankloanapplication.service.LoanService;
@@ -28,6 +30,14 @@ public class LoanServiceImpl implements LoanService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private LoanTypeRepository loanTypeRepository;
+
+    @Autowired
+    private LoanScoreResultRepository loanScoreResultRepository;
+
+    @Autowired
+    private LoanStatusRepository loanStatusRepository;
 
     public static final String ADMIN_lOAN = "/loans/loan";
 
@@ -35,9 +45,8 @@ public class LoanServiceImpl implements LoanService {
     public LoanWsDto createLoan(LoanWsDto request) {
         Loan loan = new Loan();
         List<LoanDto> loanDtos=request.getLoanDtoList();
-        List<Loan> loans=new ArrayList<>();
+        List<LoanDto> loans=new ArrayList<>();
         for(LoanDto loanDto:loanDtos) {
-
             if (loanDto.getRecordId() != null) {
                 loan = loanRepository.findByRecordId(request.getRecordId());
                 modelMapper.map(loanDto, loan);
@@ -48,16 +57,29 @@ public class LoanServiceImpl implements LoanService {
                 loan.setStatus(true);
                 loan.setCreationTime(new Date());
                 loanRepository.save(loan);
+                LoanType loanType = loanTypeRepository.findByRecordId(loanDto.getLoanTypeId());
+                String loanTypeName = loanType.getName();
+                LoanStatus loanStatus = loanStatusRepository.findByRecordId(loanDto.getLoanStatusId());
+                String loanStatusVar = loanStatus.getName();
+                LoanScoreResult loanScoreResult = loanScoreResultRepository.findByRecordId(loanDto.getLoanScoreResultId());
+                String loanResult=loanScoreResult.getName();
+                loanDto.setLoanType(loanTypeName);
+                loanDto.setLoanStatus(loanStatusVar);
+                loanDto.setLoanScoreResult(loanResult);
             }
             if (request.getRecordId() == null) {
                 loan.setRecordId(String.valueOf(loan.getId().getTimestamp()));
             }
             loanRepository.save(loan);
-            loans.add(loan);
+            loans.add(loanDto);
             loanDto.setBaseUrl(ADMIN_lOAN);
+
             request.setMessage("Data added Successfully");
+
+
         }
         request.setLoanDtoList(modelMapper.map(loans,List.class));
+
         return request;
 
     }

@@ -12,6 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class LoanApplicationWsDto extends CommonWsDto{
-
     List<LoanApplicationDto> loanApplicationDtos;
 }

@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document("loanScoreResult")
+@Document("loanScore")
 public class LoanScoreResult extends BaseEntity{
     private String description;
     private Integer loanScoreLimit;

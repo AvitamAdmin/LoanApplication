@@ -1,6 +1,5 @@
 package com.avitam.bankloanapplication.model.dto;
 
-import com.avitam.bankloanapplication.model.entity.LoanLimit;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,11 +1,6 @@
 package com.avitam.bankloanapplication.model.dto;
 
-import com.avitam.bankloanapplication.model.entity.BaseEntity;
-import com.avitam.bankloanapplication.model.entity.Notification;
 import lombok.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @Setter
 @Getter

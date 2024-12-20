@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bson.types.Binary;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter

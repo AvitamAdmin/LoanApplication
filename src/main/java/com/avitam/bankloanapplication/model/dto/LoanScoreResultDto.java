@@ -2,7 +2,7 @@ package com.avitam.bankloanapplication.model.dto;
 
 import lombok.*;
 
-import java.util.List;
+
 
 @Getter
 @Setter
