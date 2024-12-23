@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @NoArgsConstructor
 @ToString
-@Document("loan_application")
+@Document("loanApplication")
 public class LoanApplication extends BaseEntity{
 
     private String customerId;

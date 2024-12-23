@@ -19,6 +19,7 @@ public class Loan extends BaseEntity{
    private String loanApplicationId;
    private String loanStatus;
    private String loanScoreResult;
+   private String loanType;
 
 
 }

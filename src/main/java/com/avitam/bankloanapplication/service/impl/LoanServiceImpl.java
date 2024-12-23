@@ -40,15 +40,25 @@ public class LoanServiceImpl implements LoanService {
     private LoanStatusRepository loanStatusRepository;
 
     public static final String ADMIN_lOAN = "/loans/loan";
-
-
     public LoanWsDto createLoan(LoanWsDto request) {
         Loan loan = new Loan();
         List<LoanDto> loanDtos=request.getLoanDtoList();
-        List<LoanDto> loans=new ArrayList<>();
+        List<Loan> loans=new ArrayList<>();
         for(LoanDto loanDto:loanDtos) {
             if (loanDto.getRecordId() != null) {
-                loan = loanRepository.findByRecordId(request.getRecordId());
+                loan = loanRepository.findByRecordId(loanDto.getRecordId());
+                if(loanDto.getLoanTypeId()!=null) {
+                    LoanType loanType = loanTypeRepository.findByRecordId(loanDto.getLoanTypeId());
+                    loan.setLoanType(loanType.getName());
+                }
+                if(loanDto.getLoanScoreResultId()!=null) {
+                    LoanScoreResult loanScoreResult = loanScoreResultRepository.findByRecordId(loanDto.getLoanScoreResultId());
+                    loan.setLoanType(loanScoreResult.getName());
+                }
+                if(loanDto.getLoanStatusId()!=null){
+                    LoanStatus loanStatus = loanStatusRepository.findByRecordId(loanDto.getLoanScoreResultId());
+                    loan.setLoanStatus(loanStatus.getName());
+                }
                 modelMapper.map(loanDto, loan);
                 loanRepository.save(loan);
                 request.setMessage("Data updated successfully");
@@ -56,27 +66,26 @@ public class LoanServiceImpl implements LoanService {
                 loan = modelMapper.map(loanDto, Loan.class);
                 loan.setStatus(true);
                 loan.setCreationTime(new Date());
-                loanRepository.save(loan);
-                LoanType loanType = loanTypeRepository.findByRecordId(loanDto.getLoanTypeId());
+                LoanType loanType = loanTypeRepository.findByRecordId(loan.getLoanTypeId());
                 String loanTypeName = loanType.getName();
-                LoanStatus loanStatus = loanStatusRepository.findByRecordId(loanDto.getLoanStatusId());
+                LoanStatus loanStatus = loanStatusRepository.findByRecordId(loan.getLoanStatusId());
                 String loanStatusVar = loanStatus.getName();
-                LoanScoreResult loanScoreResult = loanScoreResultRepository.findByRecordId(loanDto.getLoanScoreResultId());
+                LoanScoreResult loanScoreResult = loanScoreResultRepository.findByRecordId(loan.getLoanScoreResultId());
                 String loanResult=loanScoreResult.getName();
-                loanDto.setLoanType(loanTypeName);
-                loanDto.setLoanStatus(loanStatusVar);
-                loanDto.setLoanScoreResult(loanResult);
+                loan.setLoanType(loanTypeName);
+                loan.setLoanStatus(loanStatusVar);
+                loan.setLoanScoreResult(loanResult);
+                modelMapper.map(loanDto, loan);
+                loanRepository.save(loan);
             }
             if (request.getRecordId() == null) {
                 loan.setRecordId(String.valueOf(loan.getId().getTimestamp()));
             }
             loanRepository.save(loan);
-            loans.add(loanDto);
+            loans.add(loan);
             loanDto.setBaseUrl(ADMIN_lOAN);
 
             request.setMessage("Data added Successfully");
-
-
         }
         request.setLoanDtoList(modelMapper.map(loans,List.class));
 

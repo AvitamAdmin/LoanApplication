@@ -29,7 +29,6 @@ public class LoanController extends BaseController {
 
     private static final String ADMIN_LOAN= "/loans/loan";
 
-
     @PostMapping
     public LoanWsDto getAllLoan(@RequestBody LoanWsDto loanWsDto){
         Pageable pageable=getPageable(loanWsDto.getPage(),loanWsDto.getSizePerPage(),loanWsDto.getSortDirection(),loanWsDto.getSortField());
@@ -41,7 +40,6 @@ public class LoanController extends BaseController {
         loanWsDto.setTotalPages(page.getTotalPages());
         loanWsDto.setTotalRecords(page.getTotalElements());
         return loanWsDto;
-
     }
 
     @PostMapping("/edit")
