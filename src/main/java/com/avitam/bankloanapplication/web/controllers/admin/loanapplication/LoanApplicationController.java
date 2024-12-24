@@ -56,7 +56,7 @@ public class LoanApplicationController extends BaseController {
 
     @GetMapping("/get")
     @ResponseBody
-    public LoanApplicationWsDto getLoanType(@RequestBody LoanApplicationWsDto request) {
+    public LoanApplicationWsDto getLoanType() {
         LoanApplicationWsDto loanApplicationWsDto = new LoanApplicationWsDto();
         loanApplicationWsDto.setLoanApplicationDtos(modelMapper.map(loanApplicationRepository.findByStatusOrderByIdentifier(true),List.class));
         loanApplicationWsDto.setBaseUrl(ADMIN_LOANAPPLICATION);
