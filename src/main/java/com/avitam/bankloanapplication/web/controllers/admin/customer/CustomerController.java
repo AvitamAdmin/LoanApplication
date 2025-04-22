@@ -94,4 +94,10 @@ public class CustomerController extends BaseController {
         return customerWsDto;
     }
 
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new Customer());
+    }
+
 }

@@ -110,4 +110,10 @@ public class LoanApplicationController extends BaseController {
         loanApplicationWsDto.setBaseUrl(ADMIN_LOANAPPLICATION);
         return loanApplicationWsDto;
     }
+
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new LoanApplication());
+    }
 }

@@ -4,6 +4,7 @@ import com.avitam.bankloanapplication.core.service.CoreService;
 import com.avitam.bankloanapplication.core.service.UserService;
 import com.avitam.bankloanapplication.model.dto.*;
 import com.avitam.bankloanapplication.model.entity.Customer;
+import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.repository.UserRepository;
@@ -106,7 +107,7 @@ public class AdminController extends BaseController{
     @GetMapping("/getAdvanceSearch")
     @ResponseBody
     public List<SearchDto> getSearchAttributes(){
-        return getGroupedParentAndChildAttributes(new Customer());
+        return getGroupedParentAndChildAttributes(new User());
     }
 
 

@@ -93,5 +93,10 @@ public class KYCController extends BaseController {
         kycWsDto.setBaseUrl(ADMIN_KYC);
         return kycWsDto;
     }
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new KYC());
+    }
 
 }

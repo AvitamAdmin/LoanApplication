@@ -3,6 +3,7 @@ package com.avitam.bankloanapplication.web.controllers.admin.intrface;
 import com.avitam.bankloanapplication.core.service.UserService;
 import com.avitam.bankloanapplication.model.dto.NodeDto;
 import com.avitam.bankloanapplication.model.dto.NodeWsDto;
+import com.avitam.bankloanapplication.model.dto.SearchDto;
 import com.avitam.bankloanapplication.model.entity.Node;
 import com.avitam.bankloanapplication.repository.NodeRepository;
 import com.avitam.bankloanapplication.service.NodeService;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -97,10 +97,9 @@ public class InterfaceController extends BaseController {
         nodeWsDto.setMessage("Data deleted successfully!!");
         return nodeWsDto;
     }
-
-
-
-
-
-
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new Node());
+    }
 }

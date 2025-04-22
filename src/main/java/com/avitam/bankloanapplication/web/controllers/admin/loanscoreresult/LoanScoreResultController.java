@@ -2,6 +2,7 @@ package com.avitam.bankloanapplication.web.controllers.admin.loanscoreresult;
 
 import com.avitam.bankloanapplication.model.dto.LoanScoreResultDto;
 import com.avitam.bankloanapplication.model.dto.LoanScoreResultWsDto;
+import com.avitam.bankloanapplication.model.dto.SearchDto;
 import com.avitam.bankloanapplication.model.entity.LoanScoreResult;
 import com.avitam.bankloanapplication.repository.LoanScoreResultRepository;
 import com.avitam.bankloanapplication.service.LoanScoreResultService;
@@ -82,5 +83,9 @@ public class LoanScoreResultController extends BaseController {
         loanScoreResultWsDto.setBaseUrl(ADMIN_LOANSCORE);
         return loanScoreResultWsDto;
     }
-
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new LoanScoreResult());
+    }
 }

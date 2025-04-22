@@ -1,10 +1,7 @@
 package com.avitam.bankloanapplication.web.controllers.admin.notification;
 
 
-import com.avitam.bankloanapplication.model.dto.CommonDto;
-import com.avitam.bankloanapplication.model.dto.LoanStatusDto;
-import com.avitam.bankloanapplication.model.dto.NotificationDto;
-import com.avitam.bankloanapplication.model.dto.NotificationWsDto;
+import com.avitam.bankloanapplication.model.dto.*;
 import com.avitam.bankloanapplication.model.entity.Notification;
 import com.avitam.bankloanapplication.repository.NotificationRepository;
 import com.avitam.bankloanapplication.service.impl.NotificationServiceImpl;
@@ -76,5 +73,10 @@ public class NotificationController extends BaseController {
         notificationwsDto.setMessage("Data deleted successfully");
         notificationwsDto.setBaseUrl(ADMIN_NOTIFICATION);
         return notificationwsDto;
+    }
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new Notification());
     }
 }

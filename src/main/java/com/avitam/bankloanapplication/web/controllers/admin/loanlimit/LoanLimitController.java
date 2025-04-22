@@ -81,4 +81,10 @@ public class LoanLimitController extends BaseController {
             return loanLimitWsDto;
         }
 
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new LoanLimit());
+    }
+
 }

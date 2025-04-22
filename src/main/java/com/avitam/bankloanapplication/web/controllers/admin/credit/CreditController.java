@@ -2,6 +2,7 @@ package com.avitam.bankloanapplication.web.controllers.admin.credit;
 
 import com.avitam.bankloanapplication.model.dto.CreditDto;
 import com.avitam.bankloanapplication.model.dto.CreditWsDto;
+import com.avitam.bankloanapplication.model.dto.SearchDto;
 import com.avitam.bankloanapplication.model.entity.Credit;
 import com.avitam.bankloanapplication.repository.CreditRepository;
 import com.avitam.bankloanapplication.service.CreditService;
@@ -85,4 +86,11 @@ public class CreditController extends BaseController {
         return creditWsDto;
 
     }
+
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new Credit());
+    }
+
 }

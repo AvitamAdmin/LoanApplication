@@ -2,6 +2,7 @@ package com.avitam.bankloanapplication.web.controllers.admin.loan;
 
 import com.avitam.bankloanapplication.model.dto.LoanDto;
 import com.avitam.bankloanapplication.model.dto.LoanWsDto;
+import com.avitam.bankloanapplication.model.dto.SearchDto;
 import com.avitam.bankloanapplication.model.entity.Loan;
 import com.avitam.bankloanapplication.repository.LoanRepository;
 import com.avitam.bankloanapplication.service.LoanService;
@@ -77,5 +78,10 @@ public class LoanController extends BaseController {
 //        return new ResponseEntity<>(HttpStatus.OK);
 //    }
 
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new Loan());
+    }
 
 }

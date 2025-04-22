@@ -1,7 +1,7 @@
 package com.avitam.bankloanapplication.web.controllers.admin.websiteSetting;
 
 import com.avitam.bankloanapplication.core.service.CoreService;
-
+import com.avitam.bankloanapplication.model.dto.SearchDto;
 import com.avitam.bankloanapplication.model.dto.WebsiteSettingDto;
 import com.avitam.bankloanapplication.model.dto.WebsiteSettingWsDto;
 import com.avitam.bankloanapplication.model.entity.WebsiteSetting;
@@ -9,15 +9,12 @@ import com.avitam.bankloanapplication.repository.WebsiteSettingRepository;
 import com.avitam.bankloanapplication.service.WebsiteSettingService;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
 import org.apache.commons.collections4.CollectionUtils;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +23,7 @@ import java.util.List;
 @RequestMapping("/admin/websitesetting")
 public class WebsiteSettingController extends BaseController {
 
+    private static final String ADMIN_WEBSITESETTING = "/admin/websitesetting";
     @Autowired
     private WebsiteSettingRepository websiteSettingRepository;
     @Autowired
@@ -35,34 +33,34 @@ public class WebsiteSettingController extends BaseController {
     @Autowired
     private WebsiteSettingService websiteSettingService;
 
-    private static final String ADMIN_WEBSITESETTING="/admin/websitesetting";
-
-
     @PostMapping
     public WebsiteSettingWsDto getAllSetting(@RequestBody WebsiteSettingWsDto websiteSettingWsDto) {
-        Pageable pageable=getPageable(websiteSettingWsDto.getPage(),websiteSettingWsDto.getSizePerPage(),websiteSettingWsDto.getSortDirection(),websiteSettingWsDto.getSortField());
-        WebsiteSettingDto websiteSettingDto = CollectionUtils.isNotEmpty(websiteSettingWsDto.getWebSiteSettingDtoList())? websiteSettingWsDto.getWebSiteSettingDtoList().get(0):new WebsiteSettingDto();
-        WebsiteSetting websiteSetting =modelMapper.map(websiteSettingDto,WebsiteSetting.class);
-        Page<WebsiteSetting> page = isSearchActive(websiteSetting) != null ? websiteSettingRepository.findAll(Example.of(websiteSetting),pageable) :websiteSettingRepository.findAll(pageable);
-        websiteSettingWsDto.setWebSiteSettingDtoList(modelMapper.map(page.getContent(),List.class));
+        Pageable pageable = getPageable(websiteSettingWsDto.getPage(), websiteSettingWsDto.getSizePerPage(), websiteSettingWsDto.getSortDirection(), websiteSettingWsDto.getSortField());
+        WebsiteSettingDto websiteSettingDto = CollectionUtils.isNotEmpty(websiteSettingWsDto.getWebSiteSettingDtoList()) ? websiteSettingWsDto.getWebSiteSettingDtoList().get(0) : new WebsiteSettingDto();
+        WebsiteSetting websiteSetting = modelMapper.map(websiteSettingDto, WebsiteSetting.class);
+        Page<WebsiteSetting> page = isSearchActive(websiteSetting) != null ? websiteSettingRepository.findAll(Example.of(websiteSetting), pageable) : websiteSettingRepository.findAll(pageable);
+        websiteSettingWsDto.setWebSiteSettingDtoList(modelMapper.map(page.getContent(), List.class));
         websiteSettingWsDto.setBaseUrl(ADMIN_WEBSITESETTING);
         websiteSettingWsDto.setTotalPages(page.getTotalPages());
         websiteSettingWsDto.setTotalRecords(page.getTotalElements());
         return websiteSettingWsDto;
+
+
     }
 
     @GetMapping("/get")
-    public WebsiteSettingWsDto getActiveStatus(){
-       WebsiteSettingWsDto websiteSettingWsDto = new WebsiteSettingWsDto();
-       websiteSettingWsDto.setWebSiteSettingDtoList(modelMapper.map(websiteSettingRepository.findByStatusOrderById(true),List.class));
-       websiteSettingWsDto.setBaseUrl(ADMIN_WEBSITESETTING);
-       return websiteSettingWsDto;
+    public WebsiteSettingWsDto getActiveStatus() {
+        WebsiteSettingWsDto websiteSettingWsDto = new WebsiteSettingWsDto();
+        websiteSettingWsDto.setWebSiteSettingDtoList(modelMapper.map(websiteSettingRepository.findByStatusOrderById(true), List.class));
+        websiteSettingWsDto.setBaseUrl(ADMIN_WEBSITESETTING);
+        return websiteSettingWsDto;
 
 
     }
-    @PostMapping(value= "/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+    @PostMapping(value = "/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public WebsiteSettingWsDto handleEdit(@ModelAttribute WebsiteSettingWsDto request) {
-       return websiteSettingService.handleEdit(request);
+        return websiteSettingService.handleEdit(request);
 
     }
 
@@ -74,5 +72,11 @@ public class WebsiteSettingController extends BaseController {
         websiteSettingWsDto.setMessage("Data deleted successfully");
         websiteSettingWsDto.setBaseUrl(ADMIN_WEBSITESETTING);
         return websiteSettingWsDto;
+    }
+
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new WebsiteSetting());
     }
 }

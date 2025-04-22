@@ -3,7 +3,6 @@ package com.avitam.bankloanapplication.web.controllers;
 import com.avitam.bankloanapplication.core.service.UserService;
 import com.avitam.bankloanapplication.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;

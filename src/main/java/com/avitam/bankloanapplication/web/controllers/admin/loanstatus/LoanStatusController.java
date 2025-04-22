@@ -67,6 +67,10 @@ public class LoanStatusController extends BaseController {
             loanStatusWsDto.setBaseUrl(ADMIN_LOANSTATUS);
             return loanStatusWsDto;
         }
-
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new LoanStatus());
+    }
 
 }

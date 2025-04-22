@@ -2,6 +2,7 @@ package com.avitam.bankloanapplication.web.controllers.admin.loanType;
 
 import com.avitam.bankloanapplication.model.dto.LoanTypeDto;
 import com.avitam.bankloanapplication.model.dto.LoanTypeWsDto;
+import com.avitam.bankloanapplication.model.dto.SearchDto;
 import com.avitam.bankloanapplication.model.entity.LoanType;
 import com.avitam.bankloanapplication.repository.LoanTypeRepository;
 import com.avitam.bankloanapplication.service.LoanTypeService;
@@ -68,5 +69,11 @@ public class LoanTypeController extends BaseController {
         loanTypeWsDto.setMessage("Data deleted successfully");
         loanTypeWsDto.setBaseUrl(ADMIN_LOANTYPE);
         return loanTypeWsDto;
+    }
+
+    @GetMapping("/getAdvancedSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes() {
+        return getGroupedParentAndChildAttributes(new LoanType());
     }
 }
