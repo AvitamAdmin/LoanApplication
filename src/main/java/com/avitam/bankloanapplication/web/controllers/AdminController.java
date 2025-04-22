@@ -85,7 +85,7 @@ public class AdminController extends BaseController{
 
     @PostMapping("/edit")
     @ResponseBody
-    public CustomerDto save(@RequestBody CustomerDto request) {
+    public UserDto save(@RequestBody UserDto request) {
 
         userService.save(request);
         return request;
@@ -101,6 +101,12 @@ public class AdminController extends BaseController{
         customerWsDto.setBaseUrl(ADMIN_USER);
         customerWsDto.setMessage("Data Deleted Successfully");
         return customerWsDto;
+    }
+
+    @GetMapping("/getAdvanceSearch")
+    @ResponseBody
+    public List<SearchDto> getSearchAttributes(){
+        return getGroupedParentAndChildAttributes(new Customer());
     }
 
 
