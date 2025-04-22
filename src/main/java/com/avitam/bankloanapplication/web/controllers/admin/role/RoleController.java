@@ -6,6 +6,7 @@ import com.avitam.bankloanapplication.model.entity.Role;
 import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.service.RoleService;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
+import com.google.common.reflect.TypeToken;
 import org.apache.commons.collections4.CollectionUtils;
 
 import org.modelmapper.ModelMapper;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -48,13 +50,11 @@ public class RoleController extends BaseController {
     }
     @GetMapping("/get")
     @ResponseBody
-    public RoleWsDto getActiveRole(@RequestBody RoleWsDto request){
+    public RoleWsDto getActiveRole(){
         RoleWsDto roleWsDto = new RoleWsDto();
-        List<Role> role = new ArrayList<>();
-        for(RoleDto roleDto: request.getRoleDtoList()){
-            role.add(roleRepository.findByRecordId(roleDto.getRecordId()));
-        }
-        roleWsDto.setRoleDtoList(modelMapper.map(role,List.class));
+        Type listType = new TypeToken<List<RoleDto>>() {
+        }.getType();
+        roleWsDto.setRoleDtoList(modelMapper.map(roleRepository.findByStatusOrderByIdentifier(true), listType));
         roleWsDto.setBaseUrl(ADMIN_ROLE);
         return roleWsDto;
     }

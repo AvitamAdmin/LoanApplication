@@ -20,4 +20,7 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     User findByMobileNumber(String username);
 
     User findByResetPasswordToken(String token);
+
+    User findByRecordId(String recordId);
+
 }

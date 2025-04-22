@@ -12,7 +12,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @ToString
-@Document("role")
+@Document("Role")
 public class Role extends BaseEntity{
 
     private Set<Node> permissions;

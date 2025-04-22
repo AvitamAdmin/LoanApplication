@@ -5,6 +5,7 @@ import com.avitam.bankloanapplication.core.Utility;
 import com.avitam.bankloanapplication.core.service.SecurityService;
 import com.avitam.bankloanapplication.core.service.UserService;
 import com.avitam.bankloanapplication.model.dto.CustomerDto;
+import com.avitam.bankloanapplication.model.dto.UserDto;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.repository.UserRepository;
@@ -127,13 +128,14 @@ public class SecurityController {
 
     @PostMapping("/register")
     @ResponseBody
-    public CustomerDto processRegister(@RequestBody CustomerDto request) {
+    public UserDto processRegister(@RequestBody UserDto request) {
        userService.save(request);
        request.setMessage("Registration Successful!!");
        return request;
     }
 
     @GetMapping("/login")
+   @ResponseBody
     public String login(Model model, String error, String logout, String quota) {
         if (error != null) {
             model.addAttribute("message", "Your username and password is invalid.");

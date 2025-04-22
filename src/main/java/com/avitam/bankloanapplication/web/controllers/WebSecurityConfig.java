@@ -46,7 +46,7 @@ public class WebSecurityConfig {
                     try{
                     requests
                                     .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                    .requestMatchers("/css/**", "/images/**", "/vendors/**", "/api/**", "/maps/**", "/resources/**", "/register", "/login", "/forgotpassword", "/resetpassword", "/handleUploadOperation", "/registrationConfirm").permitAll()
+                                    .requestMatchers("/css/**", "/images/**", "/vendors/**", "/api/**", "/maps/**", "/resources/**", "/register", "/login", "/forgotpassword","/admin/role/get", "/resetpassword", "/handleUploadOperation", "/registrationConfirm").permitAll()
                                     .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                         }catch (Exception e){
                         throw  new RuntimeException();

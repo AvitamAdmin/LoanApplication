@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 import java.util.Set;
 
-@Document("node")
+@Document("Node")
 @Getter
 @Setter
 public class Node extends BaseEntity {

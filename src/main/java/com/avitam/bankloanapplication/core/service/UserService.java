@@ -1,7 +1,6 @@
 package com.avitam.bankloanapplication.core.service;
 
-import com.avitam.bankloanapplication.model.dto.CustomerDto;
-import com.avitam.bankloanapplication.model.entity.Customer;
+import com.avitam.bankloanapplication.model.dto.UserDto;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.model.entity.VerificationToken;
 
@@ -11,7 +10,7 @@ import java.util.List;
 public interface UserService {
 
 
-    void save(CustomerDto request);
+    void save(UserDto request);
     List<User> getAll();
 
     void delete(String username);
@@ -32,7 +31,7 @@ public interface UserService {
 
     boolean isAdminRole();
 
-    Customer getCurrentUser();
+    User getCurrentUser();
 
     boolean updateResetPasswordToken(String token, String email);
 

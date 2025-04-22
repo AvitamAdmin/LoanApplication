@@ -9,7 +9,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document("users")
+@Document("User")
 public class User extends BaseEntity{
     private String username;
     private String email;

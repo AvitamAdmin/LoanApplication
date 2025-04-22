@@ -1,4 +1,4 @@
 server:
-  port: 8080
+  port: 9100
 jwt:
   secret: ATBB3nFZgmfV7vGm98DSweS6qvHbA93F84E0ATBB3nFZgmfV7vGm98DSweS6qvHbA93F84E0ATBB3nFZgmfV7vGm98DSweS6qvHbA93F84E0

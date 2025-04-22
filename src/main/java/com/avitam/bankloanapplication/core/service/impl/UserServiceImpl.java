@@ -1,9 +1,7 @@
 package com.avitam.bankloanapplication.core.service.impl;
 
-import com.avitam.bankloanapplication.model.dto.CustomerDto;
-import com.avitam.bankloanapplication.core.service.CoreService;
 import com.avitam.bankloanapplication.core.service.UserService;
-import com.avitam.bankloanapplication.model.entity.Customer;
+import com.avitam.bankloanapplication.model.dto.UserDto;
 import com.avitam.bankloanapplication.model.entity.Role;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.model.entity.VerificationToken;
@@ -37,42 +35,38 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
     private VerificationTokenRepository tokenRepository;
     @Autowired
-    private CoreService coreService;
-    @Autowired
-    CustomerRepository customerRepository;
+    RoleRepository roleRepository;
 
     @Override
-    public void save( CustomerDto request) {
-        Customer customer=new Customer();
+    public void save( UserDto request) {
+        User customer;
         if(request.getRecordId()!=null)
         {
-            customer = customerRepository.findByRecordId(request.getRecordId());
+            customer = userRepository.findByRecordId(request.getRecordId());
             modelMapper.map(request, customer);
             request.setMessage("Data updated successfully");
         }
         else {
-            customer = modelMapper.map(request,Customer.class);
+            customer = modelMapper.map(request,User.class);
             customer.setCreationTime(new Date());
-            customerRepository.save( customer);
+            userRepository.save( customer);
             }
         if(StringUtils.isNotEmpty(customer.getPassword()))
         {
             customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
         }
-            customerRepository.save(customer);
+            userRepository.save(customer);
             if (request.getRecordId() == null) {
                 customer.setRecordId(String.valueOf(customer.getId().getTimestamp()));
             }
-            customerRepository.save(customer);
-            request=(modelMapper.map(customer,CustomerDto.class));
+           userRepository.save(customer);
+            request=(modelMapper.map(customer,UserDto.class));
             request.setBaseUrl(ADMIN_USER);
     }
 
@@ -152,7 +146,8 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = getCurrentUser().getRoles();
         if (CollectionUtils.isNotEmpty(roles)) {
             for (Role role : roles) {
-                if ("ROLE_ADMIN".equals(role.getName())) {
+               Role role1= roleRepository.findByRecordId(role.getRecordId());
+                if ("ROLE_ADMIN".equals(role1.getName())) {
                     return true;
                 }
             }
@@ -161,10 +156,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Customer getCurrentUser() {
+    public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User principalObject = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-        return customerRepository.findByEmail(principalObject.getUsername());
+        if(userRepository.findByUsername(principalObject.getUsername())!= null){
+            return userRepository.findByUsername(principalObject.getUsername());
+        }
+        return userRepository.findByEmail(principalObject.getUsername());
     }
 
 
