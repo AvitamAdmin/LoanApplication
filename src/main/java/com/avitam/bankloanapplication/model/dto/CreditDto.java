@@ -10,5 +10,5 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class CreditDto extends CommonDto{
     private Integer creditScore;
-    private MultipartFile image;
+    private String image;
 }

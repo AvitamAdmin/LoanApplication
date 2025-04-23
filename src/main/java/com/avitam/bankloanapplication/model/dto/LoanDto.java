@@ -10,7 +10,7 @@ import java.util.Date;
 @ToString
 public class LoanDto extends CommonDto{
     private String loanTypeId;
-    private Double loanLimit;
+    private Double loanAmount;
     private String loanScoreResultId;
     private String loanStatusId;
     private Date loanDate;

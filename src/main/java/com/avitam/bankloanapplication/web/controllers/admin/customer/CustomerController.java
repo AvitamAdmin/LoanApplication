@@ -3,6 +3,7 @@ package com.avitam.bankloanapplication.web.controllers.admin.customer;
 import com.avitam.bankloanapplication.core.service.CoreService;
 import com.avitam.bankloanapplication.model.dto.*;
 import com.avitam.bankloanapplication.model.entity.Customer;
+import com.avitam.bankloanapplication.model.entity.LoanType;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.service.impl.CustomerServiceImpl;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
@@ -46,17 +47,18 @@ public class CustomerController extends BaseController {
     }
 
     @GetMapping("/get")
-    @ResponseBody
-    public CustomerWsDto getActiveCustomerList(@RequestBody CustomerWsDto request) {
+   // @ResponseBody
+    public CustomerWsDto getActiveCustomerList() {
         CustomerWsDto customerWsDto = new CustomerWsDto();
-        List<Customer> customers = new ArrayList<>();
-        for(CustomerDto customerDto: request.getCustomerDtoList()) {
-            customers.add(customerRepository.findByRecordId(customerDto.getRecordId()));
-        }
+        List<Customer> customers = customerRepository.findByStatus(true);
         customerWsDto.setCustomerDtoList(modelMapper.map(customers,List.class));
         customerWsDto.setBaseUrl(ADMIN_CUSTOMER);
         return customerWsDto;
+
     }
+
+
+
 
 //    @PostMapping("/getedit")
 //    @ResponseBody

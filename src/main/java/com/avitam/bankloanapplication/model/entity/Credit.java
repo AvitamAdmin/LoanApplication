@@ -11,10 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @NoArgsConstructor
 @ToString
-@Document("credit")
+@Document("Credit")
 public class Credit extends BaseEntity{
     private Integer creditScore;
-
-    private Binary photo;
+    private String photo;
 
 }

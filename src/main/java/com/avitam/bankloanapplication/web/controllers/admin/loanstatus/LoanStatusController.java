@@ -2,6 +2,7 @@ package com.avitam.bankloanapplication.web.controllers.admin.loanstatus;
 
 import com.avitam.bankloanapplication.model.dto.*;
 import com.avitam.bankloanapplication.model.entity.LoanStatus;
+import com.avitam.bankloanapplication.model.entity.LoanType;
 import com.avitam.bankloanapplication.repository.LoanStatusRepository;
 import com.avitam.bankloanapplication.service.LoanStatusService;
 import com.avitam.bankloanapplication.web.controllers.BaseController;
@@ -41,12 +42,9 @@ public class LoanStatusController extends BaseController {
 
     }
     @GetMapping("/get")
-    public LoanStatusWsDto getLoanStatus(@RequestBody LoanStatusWsDto request) {
+    public LoanStatusWsDto getLoanStatus() {
         LoanStatusWsDto loanStatusWsDto = new LoanStatusWsDto();
-        List<LoanStatus> loanStatuses = new ArrayList<>();
-        for(LoanStatusDto loanStatusDto: request.getLoanStatusDtos()) {
-            loanStatuses.add(loanStatusRepository.findByRecordId(loanStatusDto.getRecordId()));
-        }
+        List<LoanStatus> loanStatuses =  loanStatusRepository.findByStatus(true) ;
         loanStatusWsDto.setLoanStatusDtos(modelMapper.map(loanStatuses,List.class));
         loanStatusWsDto.setBaseUrl(ADMIN_LOANSTATUS);
         return loanStatusWsDto;

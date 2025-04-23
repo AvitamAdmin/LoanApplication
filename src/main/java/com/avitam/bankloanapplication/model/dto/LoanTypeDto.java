@@ -11,5 +11,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class LoanTypeDto extends CommonDto{
     private String description;
+    private String images;
 
 }

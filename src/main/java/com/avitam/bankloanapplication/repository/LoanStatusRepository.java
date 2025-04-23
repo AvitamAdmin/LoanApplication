@@ -14,4 +14,6 @@ public interface LoanStatusRepository extends MongoRepository<LoanStatus,String>
     List<LoanStatus> findByStatusOrderByIdentifier(boolean b);
 
     LoanStatus findByName(String inactive);
+
+    List<LoanStatus> findByStatus(boolean b);
 }

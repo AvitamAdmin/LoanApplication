@@ -8,6 +8,7 @@ import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.service.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,8 +20,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CoreService coreService;
     @Autowired
-
     private CustomerRepository customerRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public static final String ADMIN_CUSTOMER = "/admin/customer";
 
@@ -33,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     public CustomerWsDto handleEdit(CustomerWsDto request) {
-        //CustomerWsDto customerWsDto = new CustomerWsDto();
+        CustomerWsDto customerWsDto = new CustomerWsDto();
         Customer customer=new Customer();
         List<CustomerDto> customerDtos = request.getCustomerDtoList();
         List<Customer> customers = new ArrayList<>();
@@ -45,6 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
                 request.setMessage("Data updated successfully");
             } else {
                 customer = modelMapper.map(customerDto, Customer.class);
+                customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
                 customer.setCreationTime(new Date());
                 customer.setStatus(true);
                 customerRepository.save(customer);

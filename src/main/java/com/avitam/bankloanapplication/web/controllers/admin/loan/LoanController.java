@@ -60,12 +60,9 @@ public class LoanController extends BaseController {
     }
 
     @GetMapping("/get")
-    public LoanWsDto getLoanById(@RequestBody LoanWsDto request) {
+    public LoanWsDto getLoanById() {
         LoanWsDto loanWsDto = new LoanWsDto();
-        List<Loan> loans=new ArrayList<>();
-        for(LoanDto loanDto : request.getLoanDtoList()) {
-             loans.add(loanRepository.findByRecordId(loanDto.getRecordId()));
-        }
+        List<Loan> loans= loanRepository.findByStatus(true);
         loanWsDto.setLoanDtoList(modelMapper.map(loans,List.class));
         loanWsDto.setBaseUrl(ADMIN_LOAN);
         return loanWsDto;

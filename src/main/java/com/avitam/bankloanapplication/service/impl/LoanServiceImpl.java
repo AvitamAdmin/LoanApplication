@@ -68,13 +68,13 @@ public class LoanServiceImpl implements LoanService {
                 loan.setCreationTime(new Date());
                 LoanType loanType = loanTypeRepository.findByRecordId(loan.getLoanTypeId());
                 String loanTypeName = loanType.getName();
-                LoanStatus loanStatus = loanStatusRepository.findByRecordId(loan.getLoanStatusId());
-                String loanStatusVar = loanStatus.getName();
-                LoanScoreResult loanScoreResult = loanScoreResultRepository.findByRecordId(loan.getLoanScoreResultId());
-                String loanResult=loanScoreResult.getName();
+               // LoanStatus loanStatus = loanStatusRepository.findByRecordId(loan.getLoanStatusId());
+                //String loanStatusVar = loanStatus.getName();
+               // LoanScoreResult loanScoreResult = loanScoreResultRepository.findByRecordId(loan.getLoanScoreResultId());
+                //String loanResult=loanScoreResult.getName();
                 loan.setLoanType(loanTypeName);
-                loan.setLoanStatus(loanStatusVar);
-                loan.setLoanScoreResult(loanResult);
+                //loan.setLoanStatus(loanStatusVar);
+                //loan.setLoanScoreResult(loanResult);
                 modelMapper.map(loanDto, loan);
                 loanRepository.save(loan);
             }

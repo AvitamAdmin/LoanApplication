@@ -197,7 +197,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     private Loan loanLimitCalculator(LoanApplication loanApplication) {
 
         Loan loan = loanRepository.findByRecordId(loanApplication.getLoanId());
-        //Loan updatedLoan = modelMapper.map(loan, Loan.class);
+        Loan updatedLoan = modelMapper.map(loan, Loan.class);
         Customer customer = customerRepository.findByRecordId(loanApplication.getCustomerId());
 
         Integer loanScore = customer.getLoanScore();
@@ -213,11 +213,11 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
         if (loanScoreCheck) {
             loanLimit2.setLoanLimitAmount(income * loanMultiplier);
-            loan.setLoanLimit(loanLimit2.getLoanLimitAmount());
+         //   loan.setLoanLimit(loanLimit2.getLoanLimitAmount());
         } else if (loanLimitCheck) {
-            loan.setLoanLimit(loanLimit1.getLoanLimitAmount());
+         //   loan.setLoanLimit(loanLimit1.getLoanLimitAmount());
         } else {
-            loan.setLoanLimit(loanLimit3.getLoanLimitAmount());
+          //  loan.setLoanLimit(loanLimit3.getLoanLimitAmount());
         }
         return loan;
     }

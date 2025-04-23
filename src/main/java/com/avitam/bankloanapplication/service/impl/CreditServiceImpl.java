@@ -24,14 +24,11 @@ public class CreditServiceImpl implements CreditService {
     @Autowired
     private CreditRepository creditRepository;
 
-    @Autowired
-    private CoreService coreService;
-
     public static final String ADMIN_CREDIT = "/admin/credit";
 
     @Override
     public CreditWsDto handelEdit(CreditWsDto request) {
-        Credit credit = new Credit();
+        Credit credit;
         List<CreditDto> creditDtos = request.getCreditDtoList();
         List<Credit> credits = new ArrayList<>();
         for (CreditDto creditDto : creditDtos){
@@ -45,14 +42,6 @@ public class CreditServiceImpl implements CreditService {
                 credit =  modelMapper.map(creditDto,Credit.class);
                 credit.setCreationTime(new Date());
                 credit.setStatus(true);
-                if (creditDto.getImage() != null && !creditDto.getImage().isEmpty()){
-                    try{
-                        credit.setPhoto(new Binary(creditDto.getImage().getBytes()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        request.setMessage("Error processing image file");
-                    }
-                }
                 creditRepository.save(credit);
                 request.setMessage("Data Added Successfully");
             }

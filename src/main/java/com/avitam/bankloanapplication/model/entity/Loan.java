@@ -11,7 +11,7 @@ import java.util.Date;
 public class Loan extends BaseEntity{
 
    private String loanTypeId;
-   private Double loanLimit;
+   private Double loanAmount;
    private String loanScoreResultId;
    private String loanStatusId;
    private Date loanDate;
