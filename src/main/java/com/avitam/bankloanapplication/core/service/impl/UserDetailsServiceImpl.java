@@ -27,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String inputString) {
         User user = userRepository.findByUsername(inputString);
-        Customer customer = customerRepository.findByFirstName(inputString);
+        Customer customer = customerRepository.findByEmail(inputString);
         if (user == null && customer==null) throw new UsernameNotFoundException(inputString);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         if (user != null) {
@@ -41,6 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     grantedAuthorities
             );
         }*/
-            return new org.springframework.security.core.userdetails.User(customer.getFirstName(), customer.getPassword(), grantedAuthorities);
+           // return new org.springframework.security.core.userdetails.User(customer.getFirstName(), customer.getPassword(), grantedAuthorities);
+        return new CustomUserDetails(customer.getEmail(), customer.getPassword(), grantedAuthorities);
     }
 }
