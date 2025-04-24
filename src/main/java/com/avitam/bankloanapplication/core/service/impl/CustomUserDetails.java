@@ -5,6 +5,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+
 public class CustomUserDetails implements UserDetails {
     private final String username; // Can hold email or mobile number
     private final String password;
@@ -14,7 +19,6 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
-        //this.isActive = isActive;
         this.authorities = authorities;
     }
 
@@ -25,7 +29,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password; // Exclude password
+        return null; // Exclude password
     }
 
     @Override
@@ -53,3 +57,4 @@ public class CustomUserDetails implements UserDetails {
         return isActive;
     }
 }
+
