@@ -15,12 +15,12 @@ public class Loan extends BaseEntity{
    private String loanType;
    private BigDecimal loanEmi;
    private BigDecimal interestRate;
-   private int tenure;
+   private Integer tenure;
    private String desiredLoan;
    private String images;
    private String loanName;
    private String loanScoreResultId;
-   private int creditMultiplier;
+   private Integer creditMultiplier;
 
 
 }
