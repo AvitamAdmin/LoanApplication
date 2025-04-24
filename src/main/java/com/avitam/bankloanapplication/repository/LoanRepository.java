@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface LoanRepository extends MongoRepository<Loan,String> {
+public interface LoanRepository extends MongoRepository<Loan, String> {
 
 
     Loan findByRecordId(String recordId);
@@ -15,5 +15,8 @@ public interface LoanRepository extends MongoRepository<Loan,String> {
     void deleteByRecordId(String RecordId);
 
     List<Loan> findByStatus(boolean b);
-    List<Loan> findByLoanTypeAndStatus(String loanType,boolean status);
+
+    List<Loan> findByLoanTypeAndStatus(String loanType, boolean status);
+
+    List<Loan> findByRecordIdAndStatus(String recordId, boolean status);
 }

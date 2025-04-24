@@ -78,6 +78,15 @@ public class LoanController extends BaseController {
         return loanWsDto;
     }
 
+    @GetMapping("/getByLoanRecordId")
+    public LoanWsDto getByRecordId(@RequestParam String recordId) {
+        LoanWsDto loanWsDto = new LoanWsDto();
+        List<Loan> loans = loanRepository.findByRecordIdAndStatus(recordId,true);
+        loanWsDto.setLoanDtoList(modelMapper.map(loans, List.class));
+        loanWsDto.setBaseUrl(ADMIN_LOAN);
+        return loanWsDto;
+    }
+
 //    //TODO: need enum-string fix in LoanService
 //    @PatchMapping("/update/{loanId}")
 //    public ResponseEntity<Integer> updateLoanPartially(@PathVariable Long loanId, @RequestBody Map<Object, Object> objectMap) {
