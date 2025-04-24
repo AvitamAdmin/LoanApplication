@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerRepository extends MongoRepository<Customer, String> {
-    Optional<Customer> findByNationalIdentityNumber(String nationalIdentityNumber);
+    Optional<Customer> findByAadhaarNumber(String aadhaarNumber);
 
     Customer findByRecordId(String recordId);
 

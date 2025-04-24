@@ -33,15 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user != null) {
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
         }
-
-        /*if (customer != null) {
-            return new CustomUserDetails(
-                    user1.getMobileNumber(),
-                    user1.getStatus(),
-                    grantedAuthorities
-            );
-        }*/
-           // return new org.springframework.security.core.userdetails.User(customer.getFirstName(), customer.getPassword(), grantedAuthorities);
         return new CustomUserDetails(customer.getEmail(), customer.getPassword(), grantedAuthorities);
     }
 }

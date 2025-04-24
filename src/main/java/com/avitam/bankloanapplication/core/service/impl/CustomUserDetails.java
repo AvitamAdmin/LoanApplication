@@ -5,11 +5,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-
 public class CustomUserDetails implements UserDetails {
     private final String username; // Can hold email or mobile number
     private final String password;
@@ -29,7 +24,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null; // Exclude password
+        return password; // Exclude password
     }
 
     @Override

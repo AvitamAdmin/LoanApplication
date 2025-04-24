@@ -4,6 +4,7 @@ import com.avitam.bankloanapplication.model.entity.Role;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.net.Inet4Address;
 import java.util.List;
 import java.util.Set;
 
@@ -13,16 +14,18 @@ import java.util.Set;
 @ToString
 public class CustomerDto extends CommonDto {
 
-    private String username;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private String address;
+    private Integer age;
     private String referenceContacts;
     private String panNumber;
     private String aadhaarNumber;
     private String dateOfBirth;
     private Set<Role> roles;
-    private String mobileNumber;
+    private String phone;
     private String profileImage;
     private String resetPasswordToken;
     private String employmentType;
