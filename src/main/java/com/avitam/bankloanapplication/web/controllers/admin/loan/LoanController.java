@@ -28,14 +28,14 @@ public class LoanController extends BaseController {
     @Autowired
     private ModelMapper modelMapper;
 
-    private static final String ADMIN_LOAN= "/loans/loan";
+    private static final String ADMIN_LOAN = "/loans/loan";
 
     @PostMapping
-    public LoanWsDto getAllLoan(@RequestBody LoanWsDto loanWsDto){
-        Pageable pageable=getPageable(loanWsDto.getPage(),loanWsDto.getSizePerPage(),loanWsDto.getSortDirection(),loanWsDto.getSortField());
-        LoanDto loanDto= CollectionUtils.isNotEmpty(loanWsDto.getLoanDtoList()) ? loanWsDto.getLoanDtoList().get(0) : new LoanDto(); ;
-        Loan loan=modelMapper.map(loanDto,Loan.class);
-        Page<Loan> page=isSearchActive(loan)!=null ? loanRepository.findAll(Example.of(loan),pageable) : loanRepository.findAll(pageable);
+    public LoanWsDto getAllLoan(@RequestBody LoanWsDto loanWsDto) {
+        Pageable pageable = getPageable(loanWsDto.getPage(), loanWsDto.getSizePerPage(), loanWsDto.getSortDirection(), loanWsDto.getSortField());
+        LoanDto loanDto = CollectionUtils.isNotEmpty(loanWsDto.getLoanDtoList()) ? loanWsDto.getLoanDtoList().get(0) : new LoanDto();
+        Loan loan = modelMapper.map(loanDto, Loan.class);
+        Page<Loan> page = isSearchActive(loan) != null ? loanRepository.findAll(Example.of(loan), pageable) : loanRepository.findAll(pageable);
         loanWsDto.setLoanDtoList(modelMapper.map(page.getContent(), List.class));
         loanWsDto.setBaseUrl(ADMIN_LOAN);
         loanWsDto.setTotalPages(page.getTotalPages());
@@ -48,10 +48,11 @@ public class LoanController extends BaseController {
         return loanService.createLoan(request);
 
     }
+
     @PostMapping("/delete")
-    public LoanWsDto deleteLoan(@RequestBody LoanWsDto request){
-        for (LoanDto loanDto :request.getLoanDtoList()){
-          loanRepository.deleteByRecordId(loanDto.getRecordId());
+    public LoanWsDto deleteLoan(@RequestBody LoanWsDto request) {
+        for (LoanDto loanDto : request.getLoanDtoList()) {
+            loanRepository.deleteByRecordId(loanDto.getRecordId());
         }
         request.setMessage("Data deleted Successfully");
         request.setBaseUrl(ADMIN_LOAN);
@@ -62,8 +63,17 @@ public class LoanController extends BaseController {
     @GetMapping("/get")
     public LoanWsDto getLoanById() {
         LoanWsDto loanWsDto = new LoanWsDto();
-        List<Loan> loans= loanRepository.findByStatus(true);
-        loanWsDto.setLoanDtoList(modelMapper.map(loans,List.class));
+        List<Loan> loans = loanRepository.findByStatus(true);
+        loanWsDto.setLoanDtoList(modelMapper.map(loans, List.class));
+        loanWsDto.setBaseUrl(ADMIN_LOAN);
+        return loanWsDto;
+    }
+
+    @GetMapping("/getByLoanType")
+    public LoanWsDto getByLoanType(@RequestParam String loanType) {
+        LoanWsDto loanWsDto = new LoanWsDto();
+        List<Loan> loans = loanRepository.findByLoanTypeAndStatus(loanType, true);
+        loanWsDto.setLoanDtoList(modelMapper.map(loans, List.class));
         loanWsDto.setBaseUrl(ADMIN_LOAN);
         return loanWsDto;
     }

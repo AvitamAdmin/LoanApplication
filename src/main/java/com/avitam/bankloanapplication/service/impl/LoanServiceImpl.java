@@ -47,18 +47,11 @@ public class LoanServiceImpl implements LoanService {
         for(LoanDto loanDto:loanDtos) {
             if (loanDto.getRecordId() != null) {
                 loan = loanRepository.findByRecordId(loanDto.getRecordId());
-                if(loanDto.getLoanTypeId()!=null) {
-                    LoanType loanType = loanTypeRepository.findByRecordId(loanDto.getLoanTypeId());
+                if(loanDto.getLoanType()!=null) {
+                    LoanType loanType = loanTypeRepository.findByRecordId(loanDto.getLoanType());
                     loan.setLoanType(loanType.getName());
                 }
-                if(loanDto.getLoanScoreResultId()!=null) {
-                    LoanScoreResult loanScoreResult = loanScoreResultRepository.findByRecordId(loanDto.getLoanScoreResultId());
-                    loan.setLoanType(loanScoreResult.getName());
-                }
-                if(loanDto.getLoanStatusId()!=null){
-                    LoanStatus loanStatus = loanStatusRepository.findByRecordId(loanDto.getLoanScoreResultId());
-                    loan.setLoanStatus(loanStatus.getName());
-                }
+
                 modelMapper.map(loanDto, loan);
                 loanRepository.save(loan);
                 request.setMessage("Data updated successfully");
@@ -66,7 +59,7 @@ public class LoanServiceImpl implements LoanService {
                 loan = modelMapper.map(loanDto, Loan.class);
                 loan.setStatus(true);
                 loan.setCreationTime(new Date());
-                LoanType loanType = loanTypeRepository.findByRecordId(loan.getLoanTypeId());
+                LoanType loanType = loanTypeRepository.findByRecordId(loan.getLoanType());
                 String loanTypeName = loanType.getName();
                // LoanStatus loanStatus = loanStatusRepository.findByRecordId(loan.getLoanStatusId());
                 //String loanStatusVar = loanStatus.getName();

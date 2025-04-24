@@ -84,7 +84,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
             request.setMessage("Data added Successfully");
             loanApplications.add(loanApplication);
         }
-        request.setLoanApplicationDtos(modelMapper.map(loanApplications,List.class));
+        request.setLoanApplicationDtos(modelMapper.map(loanApplications, List.class));
         return request;
     }
 
@@ -184,8 +184,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
         } else {
             loanToUpdate.setLoanScoreResultId(loanScoreResult.getRecordId());
-            LoanStatus loanStatus = loanStatusRepository.findByName("INACTIVE");
-            loanToUpdate.setLoanStatusId(loanStatus.getRecordId());
             loanRepository.save(loanToUpdate);
         }
         loanRepository.save(loanToUpdate);
@@ -213,11 +211,11 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
         if (loanScoreCheck) {
             loanLimit2.setLoanLimitAmount(income * loanMultiplier);
-         //   loan.setLoanLimit(loanLimit2.getLoanLimitAmount());
+            //   loan.setLoanLimit(loanLimit2.getLoanLimitAmount());
         } else if (loanLimitCheck) {
-         //   loan.setLoanLimit(loanLimit1.getLoanLimitAmount());
+            //   loan.setLoanLimit(loanLimit1.getLoanLimitAmount());
         } else {
-          //  loan.setLoanLimit(loanLimit3.getLoanLimitAmount());
+            //  loan.setLoanLimit(loanLimit3.getLoanLimitAmount());
         }
         return loan;
     }

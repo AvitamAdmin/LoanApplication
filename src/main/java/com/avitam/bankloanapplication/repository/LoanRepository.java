@@ -15,4 +15,5 @@ public interface LoanRepository extends MongoRepository<Loan,String> {
     void deleteByRecordId(String RecordId);
 
     List<Loan> findByStatus(boolean b);
+    List<Loan> findByLoanTypeAndStatus(String loanType,boolean status);
 }

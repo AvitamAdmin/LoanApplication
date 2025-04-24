@@ -2,6 +2,8 @@ package com.avitam.bankloanapplication.model.entity;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -10,16 +12,15 @@ import java.util.Date;
 @Document("loan")
 public class Loan extends BaseEntity{
 
-   private String loanTypeId;
-   private Double loanAmount;
-   private String loanScoreResultId;
-   private String loanStatusId;
-   private Date loanDate;
-   private Integer creditMultiplier = 4;
-   private String loanApplicationId;
-   private String loanStatus;
-   private String loanScoreResult;
    private String loanType;
+   private BigDecimal loanEmi;
+   private BigDecimal interestRate;
+   private int tenure;
+   private String desiredLoan;
+   private String images;
+   private String loanName;
+   private String loanScoreResultId;
+   private int creditMultiplier;
 
 
 }
