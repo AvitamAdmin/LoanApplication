@@ -2,6 +2,8 @@ package com.avitam.bankloanapplication.model.dto;
 
 import com.avitam.bankloanapplication.model.entity.Role;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -9,35 +11,28 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @ToString
-public class CustomerDto extends CommonDto{
+public class CustomerDto extends CommonDto {
 
-    private String nationalIdentityNumber;
-
-    private String firstName;
-
-    private String lastName;
-
-    private Double monthlyIncome;
-
-    private String gender;
-
-    private Integer age;
-
-    private String phone;
-
+    private String username;
     private String email;
-
     private String password;
-
-    private Integer loanScore = 500;
-
+    private String address;
+    private String referenceContacts;
+    private String panNumber;
+    private String aadhaarNumber;
+    private String dateOfBirth;
     private Set<Role> roles;
+    private String mobileNumber;
+    private String profileImage;
+    private String resetPasswordToken;
+    private String employmentType;
+    private BigDecimal monthlyIncome;
+    private String bankAccNumber;
+    private String bankIFSCCode;
+    private String companyName;
+    private String residenceType;
+    private String workExperience;
+    private String currentEMI;
 
-    private List<String> loanApplicationId;
 
-    private List<String> customerList;
-
-
-    public CustomerDto(String number, String john, String cloud, String number1, String mail, double v, String female, int i, int i1, Object o) {
-    }
 }

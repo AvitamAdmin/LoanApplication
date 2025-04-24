@@ -1,6 +1,7 @@
 package com.avitam.bankloanapplication.core.service;
 
 import com.avitam.bankloanapplication.model.dto.UserDto;
+import com.avitam.bankloanapplication.model.dto.UserWsDto;
 import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.model.entity.VerificationToken;
 
@@ -40,6 +41,7 @@ public interface UserService {
     boolean updateOtp(String token, String email);
 
     void updatePassword(User user, String password);
+
 
 //    List<User> getAll();
 //

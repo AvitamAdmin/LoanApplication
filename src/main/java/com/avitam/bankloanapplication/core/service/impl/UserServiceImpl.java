@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     public static final String TOKEN_INVALID = "invalidToken";
     public static final String TOKEN_EXPIRED = "expired";
     public static final String TOKEN_VALID = "valid";
-    public static final String ADMIN_USER="/admin/user";
+    public static final String ADMIN_USER = "/admin/user";
 
     @Autowired
     private UserRepository userRepository;
@@ -44,30 +44,27 @@ public class UserServiceImpl implements UserService {
     RoleRepository roleRepository;
 
     @Override
-    public void save( UserDto request) {
+    public void save(UserDto request) {
         User customer;
-        if(request.getRecordId()!=null)
-        {
+        if (request.getRecordId() != null) {
             customer = userRepository.findByRecordId(request.getRecordId());
             modelMapper.map(request, customer);
             request.setMessage("Data updated successfully");
-        }
-        else {
-            customer = modelMapper.map(request,User.class);
+        } else {
+            customer = modelMapper.map(request, User.class);
             customer.setCreationTime(new Date());
-            userRepository.save( customer);
-            }
-        if(StringUtils.isNotEmpty(customer.getPassword()))
-        {
+            userRepository.save(customer);
+        }
+        if (StringUtils.isNotEmpty(customer.getPassword())) {
             customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
         }
-            userRepository.save(customer);
-            if (request.getRecordId() == null) {
-                customer.setRecordId(String.valueOf(customer.getId().getTimestamp()));
-            }
-           userRepository.save(customer);
-            request=(modelMapper.map(customer,UserDto.class));
-            request.setBaseUrl(ADMIN_USER);
+        userRepository.save(customer);
+        if (request.getRecordId() == null) {
+            customer.setRecordId(String.valueOf(customer.getId().getTimestamp()));
+        }
+        userRepository.save(customer);
+        request = (modelMapper.map(customer, UserDto.class));
+        request.setBaseUrl(ADMIN_USER);
     }
 
     @Override
@@ -125,7 +122,7 @@ public class UserServiceImpl implements UserService {
             return TOKEN_EXPIRED;
         }
 
-       // user.setStatus(true);
+        // user.setStatus(true);
         tokenRepository.delete(verificationToken);
         userRepository.save(user);
         return TOKEN_VALID;
@@ -146,7 +143,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = getCurrentUser().getRoles();
         if (CollectionUtils.isNotEmpty(roles)) {
             for (Role role : roles) {
-               Role role1= roleRepository.findByRecordId(role.getRecordId());
+                Role role1 = roleRepository.findByRecordId(role.getRecordId());
                 if ("ROLE_ADMIN".equals(role1.getName())) {
                     return true;
                 }
@@ -159,7 +156,7 @@ public class UserServiceImpl implements UserService {
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User principalObject = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-        if(userRepository.findByUsername(principalObject.getUsername())!= null){
+        if (userRepository.findByUsername(principalObject.getUsername()) != null) {
             return userRepository.findByUsername(principalObject.getUsername());
         }
         return userRepository.findByEmail(principalObject.getUsername());
