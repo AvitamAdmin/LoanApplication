@@ -40,6 +40,7 @@ public class LoanServiceImpl implements LoanService {
     private LoanStatusRepository loanStatusRepository;
 
     public static final String ADMIN_lOAN = "/loans/loan";
+
     public LoanWsDto createLoan(LoanWsDto request) {
         Loan loan = new Loan();
         List<LoanDto> loanDtos=request.getLoanDtoList();
