@@ -14,8 +14,8 @@ import java.util.Set;
 @Document("customer")
 
 public class Customer extends BaseEntity{
-    private String firstName;
-    private String lastName;
+
+    private String userName;
     private Double monthlyIncome;
     private String gender;
     private Integer age;

@@ -14,8 +14,8 @@ import java.util.Set;
 @ToString
 public class CustomerDto extends CommonDto {
 
-    private String firstName;
-    private String lastName;
+
+    private String userName;
     private String email;
     private String password;
     private String address;
