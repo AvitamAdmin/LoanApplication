@@ -19,7 +19,5 @@ public interface CustomerRepository extends MongoRepository<Customer, String> {
 
     Customer findByPhone(String inputString);
 
-    Customer findByUserName(String username);
-
     List<Customer> findByStatus(boolean b);
 }

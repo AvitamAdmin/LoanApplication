@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class Customer extends BaseEntity{
 
-    private String userName;
+    private String fullName;
     private Double monthlyIncome;
     private String gender;
     private Integer age;
@@ -40,6 +40,5 @@ public class Customer extends BaseEntity{
     private String residenceType;
     private String workExperience;
     private String currentEMI;
-
 
 }

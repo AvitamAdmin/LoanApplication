@@ -15,7 +15,7 @@ import java.util.Set;
 public class CustomerDto extends CommonDto {
 
 
-    private String userName;
+    private String fullName;
     private String email;
     private String password;
     private String address;
@@ -36,6 +36,7 @@ public class CustomerDto extends CommonDto {
     private String residenceType;
     private String workExperience;
     private String currentEMI;
+    private String gender;
 
 
 }

@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -57,7 +56,7 @@ public class CustomerController extends BaseController {
 
     @PostMapping("/edit")
     @ResponseBody
-    public CustomerWsDto handleEdit(@RequestBody CustomerWsDto request) {
+    public CustomerWsDto handleEdit(@RequestBody CustomerDto request) {
         return customerService.handleEdit(request);
     }
 

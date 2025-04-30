@@ -1,5 +1,6 @@
 package com.avitam.bankloanapplication.service;
 
+import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.avitam.bankloanapplication.model.dto.CustomerWsDto;
 import com.avitam.bankloanapplication.model.entity.Customer;
 
@@ -9,7 +10,7 @@ public interface CustomerService {
 
     void deleteByRecordId(String recordId);
 
-    CustomerWsDto handleEdit(CustomerWsDto request);
+    CustomerWsDto handleEdit(CustomerDto request);
 
     void updateByRecordId(String recordId);
 

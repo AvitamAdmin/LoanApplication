@@ -34,41 +34,36 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.deleteByRecordId(recordId);
     }
 
-    public CustomerWsDto handleEdit(CustomerWsDto request) {
+    public CustomerWsDto handleEdit(CustomerDto customerDto) {
         CustomerWsDto customerWsDto = new CustomerWsDto();
-        Customer customer=new Customer();
-        List<CustomerDto> customerDtos = request.getCustomerDtoList();
+        Customer customer = new Customer();
         List<Customer> customers = new ArrayList<>();
-        for(CustomerDto customerDto: customerDtos) {
-            if (customerDto.getRecordId() != null) {
-                customer = customerRepository.findByRecordId(customerDto.getRecordId());
-                modelMapper.map(customerDto, customer);
-                customerRepository.save(customer);
-                request.setMessage("Data updated successfully");
-            } else {
-                customer = modelMapper.map(customerDto, Customer.class);
-                customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
-                customer.setCreationTime(new Date());
-                customer.setStatus(true);
-                customerRepository.save(customer);
-            }
-            if (request.getRecordId() == null) {
-                customer.setRecordId(String.valueOf(customer.getId().getTimestamp()));
-            }
+        if (customerDto.getRecordId() != null) {
+            customer = customerRepository.findByRecordId(customerDto.getRecordId());
+            modelMapper.map(customerDto, customer);
             customerRepository.save(customer);
-            customers.add(customer);
-            request.setBaseUrl(ADMIN_CUSTOMER);
-            request.setMessage("Data added Successfully");
+            customerWsDto.setMessage("Data updated successfully");
+        } else {
+            customer = modelMapper.map(customerDto, Customer.class);
+            customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
+            customer.setCreationTime(new Date());
+            customer.setStatus(true);
+            customerRepository.save(customer);
         }
-        request.setCustomerDtoList(modelMapper.map(customers,List.class));
-        return request;
+        if (customerDto.getRecordId() == null) {
+            customer.setRecordId(String.valueOf(customer.getId().getTimestamp()));
+        }
+        customerRepository.save(customer);
+        customers.add(customer);
+        customerDto.setBaseUrl(ADMIN_CUSTOMER);
+        customerDto.setMessage("Data added Successfully");
+        return customerWsDto;
     }
 
     public void updateByRecordId(String recordId) {
 
-        Customer  customerOptional=customerRepository.findByRecordId(recordId);
-        if(customerOptional!=null)
-        {
+        Customer customerOptional = customerRepository.findByRecordId(recordId);
+        if (customerOptional != null) {
             customerRepository.save(customerOptional);
         }
 
