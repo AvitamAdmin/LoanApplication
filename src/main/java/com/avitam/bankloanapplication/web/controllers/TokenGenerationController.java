@@ -1,5 +1,6 @@
 package com.avitam.bankloanapplication.web.controllers;
 
+import com.avitam.bankloanapplication.model.entity.Customer;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.tokenGeneration.JWTUtility;
 import com.avitam.bankloanapplication.tokenGeneration.JwtRequest;
@@ -32,7 +33,8 @@ public class TokenGenerationController extends BaseController {
         authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
         final String token = jwtUtility.generateToken(userDetails);
-        return new JwtResponse(token);
+        Customer customer = customerRepository.findByUserName(jwtRequest.getUsername());
+        return new JwtResponse(token, customer.getRecordId());
     }
 
 

@@ -9,4 +9,5 @@ import lombok.*;
 @NoArgsConstructor
 public class JwtResponse {
     private String jwtToken;
+    private String recordId;
 }
