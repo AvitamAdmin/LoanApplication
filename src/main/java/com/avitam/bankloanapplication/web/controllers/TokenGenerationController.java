@@ -33,7 +33,7 @@ public class TokenGenerationController extends BaseController {
         authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
         final String token = jwtUtility.generateToken(userDetails);
-        Customer customer = customerRepository.findByUserName(jwtRequest.getUsername());
+        Customer customer = customerRepository.findByFullName(jwtRequest.getUsername());
         return new JwtResponse(token, customer.getRecordId());
     }
 
