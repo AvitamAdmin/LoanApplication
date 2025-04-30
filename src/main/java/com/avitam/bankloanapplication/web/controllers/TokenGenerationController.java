@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class TokenGenerationController extends BaseController {
 
     @Autowired
-     private UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private JWTUtility jwtUtility;
@@ -29,14 +29,11 @@ public class TokenGenerationController extends BaseController {
     CustomerRepository customerRepository;
 
     @PostMapping("/api/authenticate")
-    public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest){
+    public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) {
         authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
         final String token = jwtUtility.generateToken(userDetails);
-        Customer customer = customerRepository.findByFullName(jwtRequest.getUsername());
-        return new JwtResponse(token, customer.getRecordId());
+        Customer customer = customerRepository.findByEmail(jwtRequest.getUsername());
+        return new JwtResponse(token, customer);
     }
-
-
-
 }

@@ -1,4 +1,5 @@
 package com.avitam.bankloanapplication.tokenGeneration;
+import com.avitam.bankloanapplication.model.entity.Customer;
 
 import lombok.*;
 
@@ -9,5 +10,5 @@ import lombok.*;
 @NoArgsConstructor
 public class JwtResponse {
     private String jwtToken;
-    private String recordId;
+    private Customer customer;
 }
