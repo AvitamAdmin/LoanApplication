@@ -79,4 +79,25 @@ public class CustomerServiceImpl implements CustomerService {
         return null;
     }
 
+    @Override
+    public boolean updateResetPasswordToken(String token, String email) {
+        return false;
+    }
+
+    @Override
+    public boolean updateOtp(String token, String email) {
+        return false;
+    }
+
+    @Override
+    public Customer getByResetPasswordToken(String resetPasswordToken) {
+        return null;
+    }
+
+    @Override
+    public void updatePassword(Customer customer, String password) {
+
+    }
+
+
 }

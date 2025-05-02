@@ -17,4 +17,12 @@ public interface CustomerService {
     Object getCustomerByNationalIdentityNumber(Object o);
 
     Object getAllCustomers();
+
+    boolean updateResetPasswordToken(String token, String email);
+
+    boolean updateOtp(String token, String email);
+
+    Customer getByResetPasswordToken(String resetPasswordToken);
+
+    void updatePassword(Customer customer, String password);
 }

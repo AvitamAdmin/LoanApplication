@@ -78,8 +78,8 @@ public class LoanController extends BaseController {
         return loanWsDto;
     }
 
-    @GetMapping("/getByLoanRecordId")
-    public LoanWsDto getByRecordId(@RequestParam String recordId) {
+    @PostMapping("/getByLoanRecordId")
+    public LoanWsDto getByRecordId(@RequestBody String recordId) {
         LoanWsDto loanWsDto = new LoanWsDto();
         List<Loan> loans = loanRepository.findByRecordIdAndStatus(recordId,true);
         loanWsDto.setLoanDtoList(modelMapper.map(loans, List.class));

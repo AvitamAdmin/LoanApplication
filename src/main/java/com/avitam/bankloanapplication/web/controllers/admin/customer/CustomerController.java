@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/admin/customer")
 public class CustomerController extends BaseController {
     @Autowired
@@ -64,13 +64,11 @@ public class CustomerController extends BaseController {
     }
 
     @PostMapping("/edit")
-    @ResponseBody
     public CustomerWsDto handleEdit(@RequestBody CustomerDto request) {
         return customerService.handleEdit(request);
     }
 
     @PostMapping("/delete")
-    @ResponseBody
     public CustomerWsDto deleteCustomer(@RequestBody CustomerWsDto customerWsDto) {
         for (CustomerDto customerDto : customerWsDto.getCustomerDtoList()) {
             customerRepository.deleteByRecordId(customerDto.getRecordId());
@@ -81,7 +79,6 @@ public class CustomerController extends BaseController {
     }
 
     @GetMapping("/getAdvancedSearch")
-    @ResponseBody
     public List<SearchDto> getSearchAttributes() {
         return getGroupedParentAndChildAttributes(new Customer());
     }

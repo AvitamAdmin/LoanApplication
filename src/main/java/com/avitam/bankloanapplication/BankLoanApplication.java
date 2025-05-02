@@ -26,7 +26,8 @@ import java.util.Locale;
                 "com.avitam.bankloanapplication.web.controllers",
                 "com.avitam.bankloanapplication.core",
                 "com.avitam.bankloanapplication.exception",
-                "com.avitam.bankloanapplication.model"
+                "com.avitam.bankloanapplication.model",
+                "com.avitam.bankloanapplication.mail"
         }
 )
 public class BankLoanApplication {
