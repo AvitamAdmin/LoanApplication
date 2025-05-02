@@ -13,8 +13,6 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 public class CustomerDto extends CommonDto {
-
-
     private String fullName;
     private String email;
     private String password;
@@ -37,6 +35,9 @@ public class CustomerDto extends CommonDto {
     private String workExperience;
     private String currentEMI;
     private String gender;
-
-
+    private String emailOTP;
+    private String token;
+    private boolean isNew;
+    private String referralCode;
+    private String mobileOTP;
 }
