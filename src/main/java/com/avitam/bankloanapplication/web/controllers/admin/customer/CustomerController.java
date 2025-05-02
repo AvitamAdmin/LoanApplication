@@ -53,6 +53,15 @@ public class CustomerController extends BaseController {
         customerWsDto.setBaseUrl(ADMIN_CUSTOMER);
         return customerWsDto;
     }
+    @GetMapping("/getByRecordId")
+    @ResponseBody
+    public CustomerWsDto getByRecordId(@RequestParam String recordId) {
+        CustomerWsDto customerWsDto = new CustomerWsDto();
+        List<Customer> customers = customerRepository.findByRecordId(recordId,true);
+        customerWsDto.setCustomerDtoList(modelMapper.map(customers, List.class));
+        customerWsDto.setBaseUrl(ADMIN_CUSTOMER);
+        return customerWsDto;
+    }
 
     @PostMapping("/edit")
     @ResponseBody
