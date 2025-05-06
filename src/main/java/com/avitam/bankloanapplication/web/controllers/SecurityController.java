@@ -172,6 +172,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -185,7 +186,7 @@ import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.UUID;
 
-@RestController
+@Controller
 @CrossOrigin
 public class SecurityController extends BaseController {
 
