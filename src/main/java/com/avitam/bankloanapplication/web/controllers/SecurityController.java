@@ -160,12 +160,16 @@ package com.avitam.bankloanapplication.web.controllers;
 
 
 import com.avitam.bankloanapplication.core.service.SecurityService;
+import com.avitam.bankloanapplication.core.service.UserService;
 import com.avitam.bankloanapplication.mail.service.EMail;
 import com.avitam.bankloanapplication.mail.service.MailService;
 import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.avitam.bankloanapplication.model.dto.CustomerWsDto;
+import com.avitam.bankloanapplication.model.dto.UserDto;
 import com.avitam.bankloanapplication.model.entity.Customer;
+import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
+import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.service.CustomerService;
 import jakarta.mail.MessagingException;
 import org.modelmapper.ModelMapper;
@@ -200,6 +204,12 @@ public class SecurityController extends BaseController {
     private SecurityService securityService;
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private Environment env;
@@ -334,5 +344,20 @@ public class SecurityController extends BaseController {
             model.addAttribute("message", "You have been logged out successfully.");
         }
         return "login";
+    }
+
+//    @GetMapping("/register")
+//    public String showRegistrationForm(Model model) {
+//        model.addAttribute("userForm", new User());
+//        model.addAttribute("roles", roleRepository.findAll());
+//        return "security/signupForm";
+//    }
+
+    @PostMapping("/register")
+    @ResponseBody
+    public UserDto processRegister(@RequestBody UserDto request) {
+       userService.save(request);
+       request.setMessage("Registration Successful!!");
+       return request;
     }
 }
