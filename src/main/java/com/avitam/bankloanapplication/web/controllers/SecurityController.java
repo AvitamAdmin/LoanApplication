@@ -60,27 +60,27 @@
 //        return "security/forgotpasswordsuccess";
 //    }
 //
-////    public void sendEmail(String recipientEmail, String link)
-////            throws MessagingException, UnsupportedEncodingException {
-////        EMail eMail = new EMail();
-////
-////        //eMail.setFrom("healthcheck@cheil.com");
-////        eMail.setTo(recipientEmail);
-////
-////        String subject = "Here's the link to reset your password";
-////
-////        String content = "<p>Hello,</p>"
-////                + "<p>You have requested to reset your password.</p>"
-////                + "<p>Click the link below to change your password:</p>"
-////                + "<p><a href=\"" + link + "\">Change my password</a></p>"
-////                + "<br>"
-////                + "<p>Ignore this email if you do remember your password, "
-////                + "or you have not made the request.</p>";
-////
-////        eMail.setSubject(subject);
-////        eMail.setContent(content);
-////        mailService.sendEmail(eMail);
-////    }
+/// /    public void sendEmail(String recipientEmail, String link)
+/// /            throws MessagingException, UnsupportedEncodingException {
+/// /        EMail eMail = new EMail();
+/// /
+/// /        //eMail.setFrom("healthcheck@cheil.com");
+/// /        eMail.setTo(recipientEmail);
+/// /
+/// /        String subject = "Here's the link to reset your password";
+/// /
+/// /        String content = "<p>Hello,</p>"
+/// /                + "<p>You have requested to reset your password.</p>"
+/// /                + "<p>Click the link below to change your password:</p>"
+/// /                + "<p><a href=\"" + link + "\">Change my password</a></p>"
+/// /                + "<br>"
+/// /                + "<p>Ignore this email if you do remember your password, "
+/// /                + "or you have not made the request.</p>";
+/// /
+/// /        eMail.setSubject(subject);
+/// /        eMail.setContent(content);
+/// /        mailService.sendEmail(eMail);
+/// /    }
 //
 //
 //    @GetMapping("/resetpassword")
@@ -167,7 +167,6 @@ import com.avitam.bankloanapplication.model.dto.CustomerDto;
 import com.avitam.bankloanapplication.model.dto.CustomerWsDto;
 import com.avitam.bankloanapplication.model.dto.UserDto;
 import com.avitam.bankloanapplication.model.entity.Customer;
-import com.avitam.bankloanapplication.model.entity.User;
 import com.avitam.bankloanapplication.repository.CustomerRepository;
 import com.avitam.bankloanapplication.repository.RoleRepository;
 import com.avitam.bankloanapplication.service.CustomerService;
@@ -183,7 +182,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -356,8 +354,8 @@ public class SecurityController extends BaseController {
     @PostMapping("/register")
     @ResponseBody
     public UserDto processRegister(@RequestBody UserDto request) {
-       userService.save(request);
-       request.setMessage("Registration Successful!!");
-       return request;
+        userService.save(request);
+        request.setMessage("Registration Successful!!");
+        return request;
     }
 }
